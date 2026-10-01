@@ -1,0 +1,108 @@
+/* ── Reset ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Design tokens ──────────────────────────────────────────────────────────── */
+:root {
+  /* Surfaces */
+  --bg:        #f5f6f7;
+  --surface:   #ffffff;
+  --surface-2: #f0f1f3;
+
+  /* Text */
+  --text:      #1a1c1e;
+  --text-2:    #4a5058;
+  --text-3:    #8a9099;
+
+  /* Borders */
+  --border:    #d8dce2;
+  --border-2:  #b8bdc6;
+
+  /* Accent — slate-blue, scientific, not warm-clay */
+  --accent:        #3a5bd9;
+  --accent-light:  #eef1fb;
+  --accent-text:   #2a44b0;
+
+  /* Semantic */
+  --success:       #1a7a4a;
+  --success-light: #e6f5ed;
+  --warning:       #8a5a00;
+  --warning-light: #fff8e6;
+  --danger:        #c0392b;
+  --danger-light:  #fdecea;
+
+  /* Layout */
+  --radius:    6px;
+  --radius-lg: 10px;
+  --shadow:    0 1px 3px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.05);
+
+  /* Type */
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:        #0f1117;
+    --surface:   #181c24;
+    --surface-2: #1f2430;
+    --text:      #e8eaed;
+    --text-2:    #9aa3b0;
+    --text-3:    #5a6270;
+    --border:    #2a3040;
+    --border-2:  #3a4255;
+    --accent:        #5b7cf5;
+    --accent-light:  #1a2040;
+    --accent-text:   #8aacff;
+    --success:       #3ab870;
+    --success-light: #0a2018;
+    --warning:       #d4a030;
+    --warning-light: #1e1600;
+    --danger:        #e05a4a;
+    --danger-light:  #200a08;
+    --shadow:    0 1px 4px rgba(0,0,0,.3), 0 0 0 1px rgba(0,0,0,.4);
+  }
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────────── */
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── Typography ─────────────────────────────────────────────────────────────── */
+h1 { font-size: 1.5rem; font-weight: 600; }
+h2 { font-size: 1.15rem; font-weight: 600; }
+h3 { font-size: 1rem; font-weight: 600; }
+
+/* ── Form elements ──────────────────────────────────────────────────────────── */
+input, select, textarea {
+  font-family: var(--font);
+  font-size: .875rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .4rem .65rem;
+  width: 100%;
+  transition: border-color .15s, box-shadow .15s;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(90,120,245,.15);
+}
+input::placeholder, textarea::placeholder { color: var(--text-3); }
+textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+select { cursor: pointer; }
+
+/* ── Buttons ────────────────────────────────────────────────────────────────── */
+button { font-family: var(--font); cursor: pointer; }
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
