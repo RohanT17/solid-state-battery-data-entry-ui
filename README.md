@@ -1,12 +1,13 @@
 # Solid State Battery Data Entry
-A UI for users to enter data into a database storing solid state battery information based on this paper: https://doi.org/10.1016/j.joule.2026.102595. 
+A UI for users to enter data into a database storing solid state battery information based on this paper: https://doi.org/10.1016/j.joule.2026.102595.
+
 ---
 
 ## What it does
 
 You enter data in three steps, mirroring the natural flow of reading a paper:
 
-1. **Papers**: journal, title, author, DOI, publication date, tags, notes
+1. **Papers**: journal, lead author, DOI, publication date, ingested-by, and flags for which tests are reported
 2. **Batteries**: one or more cells per paper, each with five tabbed sections: Anode, Cathode, Separator, Assembly, Measurement
 3. **CSV preview**: review the flattened table, then download or copy the raw CSV
 
@@ -35,6 +36,9 @@ npm run preview
 
 ## Project structure
 
+<details>
+<summary>Show file tree</summary>
+
 ```
 solid-state-battery-data-entry-ui/
 ├── index.html
@@ -60,16 +64,14 @@ solid-state-battery-data-entry-ui/
     │   └── global.css            # CSS custom properties (tokens), resets, base form styles
     │
     └── components/
-        ├── UI.tsx                # Shared primitives: Button, Field, FormGrid, Badge,
-        │                         #   Card, Collapsible, TagInput, ConditionalField, StatusDot
-        ├── UI.module.css
+        ├── UI.tsx                # Button, Field, FormGrid, Badge, Collapsible, StatusDot
         │
         ├── Paper/
         │   ├── PaperForm.tsx     # Editable fields for one paper
         │   └── PaperCard.tsx     # Collapsible wrapper around PaperForm
         │
         ├── Battery/
-        │   ├── BatteryCard.tsx   # Collapsible card with vertical tab rail + section status dots
+        │   ├── BatteryCard.tsx   # Collapsible card with vertical tab rail + status dots
         │   └── tabs/
         │       ├── AnodeTab.tsx
         │       ├── CathodeTab.tsx        # conditional NMC ratio field
@@ -81,9 +83,14 @@ solid-state-battery-data-entry-ui/
             └── CsvPreview.tsx    # Scrollable table, copy-to-clipboard, download button
 ```
 
+</details>
+
 ---
 
 ## CSV schema
+
+<details>
+<summary>Show all columns</summary>
 
 Every row is one battery. Columns in output order:
 
@@ -91,11 +98,13 @@ Every row is one battery. Columns in output order:
 |---|---|
 | `journal` | Paper |
 | `pub_date` | Paper |
+| `lead_author` | Paper |
+| `ingested_by` | Paper |
 | `doi` | Paper |
-| `first_author` | Paper |
-| `title` | Paper |
-| `tags` | Paper (semicolon-separated) |
-| `notes` | Paper |
+| `cycle_life_reported` | Paper |
+| `rate_test_reported` | Paper |
+| `eis_reported` | Paper |
+| `other_tests` | Paper |
 | `anode_material` | Anode tab |
 | `anode_thick_um` | Anode tab |
 | `anode_loading_mg_cm2` | Anode tab |
@@ -122,6 +131,8 @@ Every row is one battery. Columns in output order:
 
 Optional fields export as empty strings. The schema is fixed — all columns always appear in the header, regardless of whether any row has data for them, so the output is safe to concatenate across sessions.
 
+</details>
+
 ---
 
 ## UI patterns
@@ -133,8 +144,6 @@ Optional fields export as empty strings. The schema is fixed — all columns alw
 **Conditional fields**: selecting NMC as cathode material reveals a Ni:Mn:Co ratio field inline, directly below the dropdown. No extra tab or modal.
 
 **Duplicate battery**: each battery card has a Duplicate button that copies all fields into a new entry under the same paper. Useful when two cells from the same paper differ only in one variable.
-
-**Tag input**: press Enter or comma to commit a tag; Backspace on an empty input removes the last tag.
 
 ---
 
@@ -151,7 +160,7 @@ All state is managed in `useAppState.ts` as a single object:
 }
 ```
 
-There is no persistence yet. Refreshing the page clears all data. See "Planned additions" below.
+There is no persistence yet. Refreshing the page clears all data.
 
 ---
 

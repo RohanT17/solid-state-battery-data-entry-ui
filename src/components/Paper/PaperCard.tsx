@@ -17,7 +17,7 @@ export function PaperCard({
   onRemove,
   onGoToBatteries,
 }: PaperCardProps) {
-  const subtitle = [paper.firstAuthor, paper.publicationDate?.slice(0, 4)]
+  const subtitle = [paper.leadAuthor, paper.publicationDate]
     .filter(Boolean)
     .join(' · ')
 

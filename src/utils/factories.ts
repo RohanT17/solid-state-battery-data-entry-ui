@@ -52,11 +52,13 @@ export const emptyPaper = (): Paper => ({
   id: uid(),
   journal: '',
   publicationDate: '',
+  leadAuthor: '',
+  ingestedBy: '',
   doi: '',
-  firstAuthor: '',
-  title: '',
-  notes: '',
-  tags: [],
+  cycleLifeReported: '',
+  rateTestReported: '',
+  eisReported: '',
+  otherTests: '',
 })
 
 export const emptyBattery = (paperId: string): Battery => ({

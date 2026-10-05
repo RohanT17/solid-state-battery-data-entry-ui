@@ -1,14 +1,16 @@
-// ── Paper ────────────────────────────────────────────────────────────────────
+// ── Paper ─────────────────────────────────────────────────────────────────────
 
 export interface Paper {
   id: string
   journal: string
-  publicationDate: string
+  publicationDate: string   // stored as "Mon-YY", e.g. "Mar-24"
+  leadAuthor: string
+  ingestedBy: string
   doi: string
-  firstAuthor: string
-  title: string
-  notes: string
-  tags: string[]
+  cycleLifeReported: 'Yes' | 'No' | ''
+  rateTestReported: 'Yes' | 'No' | ''
+  eisReported: 'Yes' | 'No' | ''
+  otherTests: string
 }
 
 export type PaperDraft = Omit<Paper, 'id'>
@@ -37,7 +39,7 @@ export interface AnodeData {
 export interface CathodeData {
   material: CathodeMaterial
   thicknessUm: string
-  nmcRatio: string          // only relevant when material === 'NMC'
+  nmcRatio: string
   loadingMgCm2: string
 }
 
@@ -61,7 +63,7 @@ export interface MeasurementData {
   voltageWindow: string
   temperatureC: string
   cycles80pct: string
-  icePct: string            // initial Coulombic efficiency
+  icePct: string
 }
 
 // ── Battery ───────────────────────────────────────────────────────────────────

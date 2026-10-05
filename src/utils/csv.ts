@@ -1,17 +1,18 @@
 import Papa from 'papaparse'
 import type { Paper, Battery } from '@/types'
 
-// Flatten one (paper, battery) pair into a single CSV row object
 function flatten(paper: Paper, battery: Battery): Record<string, string> {
   return {
-    // Paper columns
+    // Paper
     journal: paper.journal,
     pub_date: paper.publicationDate,
+    lead_author: paper.leadAuthor,
+    ingested_by: paper.ingestedBy,
     doi: paper.doi,
-    first_author: paper.firstAuthor,
-    title: paper.title,
-    tags: paper.tags.join('; '),
-    notes: paper.notes,
+    cycle_life_reported: paper.cycleLifeReported,
+    rate_test_reported: paper.rateTestReported,
+    eis_reported: paper.eisReported,
+    other_tests: paper.otherTests,
 
     // Anode
     anode_material: battery.anode.material,
