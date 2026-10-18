@@ -188,9 +188,16 @@ export function Card({
 
 // ── Divider ───────────────────────────────────────────────────────────────────
 
-export function Divider({ style }: { style?: React.CSSProperties }) {
+export function Divider({
+  className,
+  style,
+}: {
+  className?: string
+  style?: React.CSSProperties
+}) {
   return (
     <hr
+      className={className}
       style={{
         border: 'none',
         borderTop: '1px solid var(--border)',
