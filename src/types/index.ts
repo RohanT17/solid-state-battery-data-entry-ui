@@ -3,7 +3,7 @@
 export interface Paper {
   id: string
   journal: string
-  publicationDate: string   // stored as "Mon-YY", e.g. "Mar-24"
+  publicationDate: string
   leadAuthor: string
   ingestedBy: string
   doi: string
@@ -17,7 +17,7 @@ export type PaperDraft = Omit<Paper, 'id'>
 
 // ── Battery sub-sections ──────────────────────────────────────────────────────
 
-export type AnodeMaterial = 'Graphite' | 'Li-metal' | 'Si/Graphite' | 'LTO' | 'Other'
+export type AnodeMaterial = '' | 'material 1' | 'material 2' | 'material 3' | 'material 4' | 'material 5'
 export type CathodeMaterial = 'LFP' | 'NMC' | 'NCA' | 'LCO' | 'Other'
 export type SeparatorMaterial =
   | 'Celgard 2325 (PP/PE/PP)'
@@ -29,7 +29,43 @@ export type SeparatorMaterial =
 export type CellFormat = 'Coin cell' | 'Pouch' | 'Cylindrical' | 'Prismatic'
 
 export interface AnodeData {
+  // Composition — Active Material
+  family: string
+  type: string
   material: AnodeMaterial
+  amCompositionPct: string
+
+  // Composition — Coating
+  coating: string
+
+  // Composition — Electrolyte
+  electrolyteFamilyInorganic: string
+  electrolyteInorganicSubcategory: string
+  electrolyteInorganicMaterial: string
+  electrolyteInorganicWtPct: string
+  electrolyteFamilyOrganic: string
+  electrolyteOrganicSubcategory: string
+  electrolyteOrganicMaterial: string
+  electrolyteOrganicWtPct: string
+
+  // Composition — Binder
+  binder: string
+  binderWtPct: string
+
+  // Composition — Ionic Salt
+  ionicSaltFamily: string
+  ionicSaltMaterial: string
+  ionicSaltWtPct: string
+
+  // Composition — Additive
+  additiveFamily: string
+  additiveMaterial: string
+  additiveWtPct: string
+
+  // Composition — Comments
+  compositionComments: string
+
+  // Layers
   thicknessUm: string
   loadingMgCm2: string
   porosityPct: string

@@ -4,6 +4,7 @@ import { BatteryCard } from '@/components/Battery/BatteryCard'
 import { CsvPreview } from '@/components/CSV/CsvPreview'
 import { Button } from '@/components/UI'
 import type { AppScreen, BatterySection } from '@/types'
+import './styles/app.css'
 
 const SCREENS: { key: AppScreen; label: string }[] = [
   { key: 'papers',    label: '1 · Papers' },
@@ -35,41 +36,24 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="app-shell">
       {/* ── Top bar ── */}
-      <header
-        style={{
-          borderBottom: '1px solid var(--border)',
-          background: 'var(--surface)',
-          padding: '0 2rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '2rem',
-          height: '52px',
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-        }}
-      >
-        <span style={{ fontWeight: 700, fontSize: '.95rem', color: 'var(--text)', letterSpacing: '-.01em' }}>
+      <header className="app-header">
+        <span className="app-title">
           Solid State Battery Data Entry
         </span>
 
-        <nav style={{ display: 'flex', gap: '4px' }}>
+        <nav className="screen-nav">
           {SCREENS.map((s) => (
             <button
               key={s.key}
               onClick={() => setScreen(s.key)}
+              className="screen-nav-button"
               style={{
-                padding: '5px 14px',
-                borderRadius: 'var(--radius)',
                 border: '1px solid ' + (screen === s.key ? 'var(--accent)' : 'transparent'),
                 background: screen === s.key ? 'var(--accent-light)' : 'transparent',
                 color: screen === s.key ? 'var(--accent-text)' : 'var(--text-2)',
                 fontWeight: screen === s.key ? 600 : 400,
-                fontSize: '.83rem',
-                cursor: 'pointer',
-                transition: 'all .15s',
               }}
             >
               {s.label}
@@ -77,22 +61,22 @@ export default function App() {
           ))}
         </nav>
 
-        <div style={{ flex: 1 }} />
-        <span style={{ fontSize: '.78rem', color: 'var(--text-3)' }}>
+        <div className="header-spacer" />
+        <span className="app-count">
           {papers.length} {papers.length === 1 ? 'paper' : 'papers'} · {batteries.length} {batteries.length === 1 ? 'battery' : 'batteries'}
         </span>
       </header>
 
       {/* ── Main content ── */}
-      <main style={{ flex: 1, maxWidth: '860px', width: '100%', margin: '0 auto', padding: '2rem 1.5rem' }}>
+      <main className="app-main">
 
         {/* ── Papers screen ── */}
         {screen === 'papers' && (
           <section>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+            <div className="screen-heading">
               <div>
-                <h1 style={{ marginBottom: '.25rem' }}>Papers</h1>
-                <p style={{ fontSize: '.85rem', color: 'var(--text-3)' }}>
+                <h1>Papers</h1>
+                <p className="screen-description">
                   Each paper groups one or more batteries. Paper metadata repeats on every CSV row.
                 </p>
               </div>
@@ -102,21 +86,13 @@ export default function App() {
             </div>
 
             {papers.length === 0 && (
-              <div
-                style={{
-                  textAlign: 'center',
-                  padding: '3rem 1rem',
-                  border: '1px dashed var(--border-2)',
-                  borderRadius: 'var(--radius-lg)',
-                  color: 'var(--text-3)',
-                }}
-              >
-                <p style={{ marginBottom: '.5rem', fontSize: '1rem' }}>No papers yet</p>
-                <p style={{ fontSize: '.85rem' }}>Click "Add paper" to start entering data.</p>
+              <div className="empty-state">
+                <p>No papers yet</p>
+                <p>Click "Add paper" to start entering data.</p>
               </div>
             )}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div className="card-list">
               {papers.map((p) => (
                 <PaperCard
                   key={p.id}
@@ -130,30 +106,10 @@ export default function App() {
             </div>
 
             {papers.length > 0 && (
-              <div style={{ marginTop: '1rem' }}>
+              <div className="add-item-container">
                 <button
                   onClick={addPaper}
-                  style={{
-                    width: '100%',
-                    padding: '.75rem',
-                    border: '1px dashed var(--border-2)',
-                    borderRadius: 'var(--radius-lg)',
-                    background: 'transparent',
-                    color: 'var(--text-3)',
-                    fontSize: '.875rem',
-                    cursor: 'pointer',
-                    transition: 'background .15s, color .15s, border-color .15s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'var(--accent-light)'
-                    e.currentTarget.style.color = 'var(--accent-text)'
-                    e.currentTarget.style.borderColor = 'var(--accent)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'transparent'
-                    e.currentTarget.style.color = 'var(--text-3)'
-                    e.currentTarget.style.borderColor = 'var(--border-2)'
-                  }}
+                  className="add-item-button"
                 >
                   + Add another paper
                 </button>
@@ -165,26 +121,25 @@ export default function App() {
         {/* ── Batteries screen ── */}
         {screen === 'batteries' && (
           <section>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.25rem', gap: '1rem' }}>
+            <div className="screen-heading screen-heading--top">
               <div>
-                <h1 style={{ marginBottom: '.25rem' }}>
+                <h1>
                   Batteries
                   {activePaperId && papers.find((p) => p.id === activePaperId) && (
-                    <span style={{ fontWeight: 400, color: 'var(--text-3)', fontSize: '1rem', marginLeft: '10px' }}>
+                    <span className="paper-label">
                       — {papers.find((p) => p.id === activePaperId)?.journal || 'Untitled paper'}
                     </span>
                   )}
                 </h1>
-                <p style={{ fontSize: '.85rem', color: 'var(--text-3)' }}>
+                <p className="screen-description">
                   Each battery entry becomes one row in the CSV.
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+              <div className="battery-actions">
                 {papers.length > 1 && (
                   <select
                     value={activePaperId ?? ''}
                     onChange={(e) => setActivePaper(e.target.value)}
-                    style={{ width: 'auto' }}
                   >
                     {papers.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -207,18 +162,17 @@ export default function App() {
             </div>
 
             {papers.length === 0 && (
-              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-3)', fontSize: '.85rem' }}>
+              <div className="no-paper-state">
                 Add a paper first before entering batteries.{' '}
                 <button
                   onClick={() => setScreen('papers')}
-                  style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
                 >
                   Go to Papers →
                 </button>
               </div>
             )}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div className="card-list">
               {activePaperBatteries.map((b, i) => (
                 <BatteryCard
                   key={b.id}
@@ -232,31 +186,10 @@ export default function App() {
             </div>
 
             {activePaperBatteries.length > 0 && (
-              <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="battery-footer">
                 <button
                   onClick={() => addBattery(activePaperId ?? papers[0]?.id ?? '')}
-                  style={{
-                    flex: 1,
-                    padding: '.75rem',
-                    border: '1px dashed var(--border-2)',
-                    borderRadius: 'var(--radius-lg)',
-                    background: 'transparent',
-                    color: 'var(--text-3)',
-                    fontSize: '.875rem',
-                    cursor: 'pointer',
-                    marginRight: '10px',
-                    transition: 'background .15s, color .15s, border-color .15s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'var(--accent-light)'
-                    e.currentTarget.style.color = 'var(--accent-text)'
-                    e.currentTarget.style.borderColor = 'var(--accent)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'transparent'
-                    e.currentTarget.style.color = 'var(--text-3)'
-                    e.currentTarget.style.borderColor = 'var(--border-2)'
-                  }}
+                  className="add-item-button"
                 >
                   + Add another battery
                 </button>
@@ -271,9 +204,9 @@ export default function App() {
         {/* ── CSV preview screen ── */}
         {screen === 'csv' && (
           <section>
-            <div style={{ marginBottom: '1.25rem' }}>
-              <h1 style={{ marginBottom: '.25rem' }}>CSV preview</h1>
-              <p style={{ fontSize: '.85rem', color: 'var(--text-3)' }}>
+            <div className="csv-heading">
+              <h1>CSV preview</h1>
+              <p className="screen-description">
                 Review before downloading. Each battery is one row; paper metadata repeats.
               </p>
             </div>
