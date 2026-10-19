@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Battery, BatterySection } from '@/types'
 import { Collapsible, Badge, Button, StatusDot, Divider } from '@/components/UI'
-import { AnodeTab } from './tabs/AnodeTab'
+import { AnodeTab } from './tabs/Anode/AnodeTab'
 import { CathodeTab } from './tabs/CathodeTab'
 import { SeparatorTab } from './tabs/SeparatorTab'
 import { AssemblyTab } from './tabs/AssemblyTab'

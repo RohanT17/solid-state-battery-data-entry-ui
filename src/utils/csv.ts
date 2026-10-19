@@ -16,6 +16,9 @@ function flatten(paper: Paper, battery: Battery): Record<string, string> {
 
     // Anode
     anode_material: battery.anode.material,
+    anode_family: battery.anode.family,
+    anode_type: battery.anode.type,
+    anode_am_composition_pct: battery.anode.amCompositionPct,
     anode_thick_um: battery.anode.thicknessUm,
     anode_loading_mg_cm2: battery.anode.loadingMgCm2,
     anode_porosity_pct: battery.anode.porosityPct,

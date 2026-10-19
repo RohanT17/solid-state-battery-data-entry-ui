@@ -17,7 +17,7 @@ export type PaperDraft = Omit<Paper, 'id'>
 
 // ── Battery sub-sections ──────────────────────────────────────────────────────
 
-export type AnodeMaterial = 'Graphite' | 'Li-metal' | 'Si/Graphite' | 'LTO' | 'Other'
+export type AnodeMaterial = '' | 'material 1' | 'material 2' | 'material 3' | 'material 4' | 'material 5'
 export type CathodeMaterial = 'LFP' | 'NMC' | 'NCA' | 'LCO' | 'Other'
 export type SeparatorMaterial =
   | 'Celgard 2325 (PP/PE/PP)'
@@ -30,6 +30,9 @@ export type CellFormat = 'Coin cell' | 'Pouch' | 'Cylindrical' | 'Prismatic'
 
 export interface AnodeData {
   material: AnodeMaterial
+  family: string
+  type: string
+  amCompositionPct: string
   thicknessUm: string
   loadingMgCm2: string
   porosityPct: string

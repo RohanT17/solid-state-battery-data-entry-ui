@@ -11,7 +11,10 @@ import type {
 export const uid = () => Math.random().toString(36).slice(2, 9)
 
 export const emptyAnode = (): AnodeData => ({
-  material: 'Graphite',
+  material: '',
+  family: '',
+  type: '',
+  amCompositionPct: '',
   thicknessUm: '',
   loadingMgCm2: '',
   porosityPct: '',
