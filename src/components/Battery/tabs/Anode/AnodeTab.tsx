@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { AnodeData } from '@/types'
-import { AnodeDetails } from './AnodeDetails'
+import { AnodeLayers } from './AnodeLayers'
 import { AnodeComposition } from './AnodeComposition'
 
 interface Props {
@@ -8,21 +8,21 @@ interface Props {
   onChange: (patch: Partial<AnodeData>) => void
 }
 
-type AnodeSubTab = 'details' | 'composition'
+type AnodeSubTab = 'composition' | 'layers'
 
 export function AnodeTab({ data, onChange }: Props) {
-  const [activeSubTab, setActiveSubTab] = useState<AnodeSubTab>('details')
+  const [activeSubTab, setActiveSubTab] = useState<AnodeSubTab>('layers')
   const tabContent = {
-    details: <AnodeDetails data={data} onChange={onChange} />,
     composition: <AnodeComposition data={data} onChange={onChange} />,
+    layers: <AnodeLayers data={data} onChange={onChange} />
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <nav aria-label="Anode subsections" style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)' }}>
         {([
-          ['details', 'Details'],
           ['composition', 'Composition'],
+          ['layers', 'Layers']
         ] as const).map(([key, label]) => (
           <button
             key={key}

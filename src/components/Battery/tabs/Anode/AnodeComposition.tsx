@@ -1,12 +1,122 @@
 import type { AnodeData } from '@/types'
 import { Field } from '@/components/UI'
 
-const FAMILIES = ['option 1', 'option 2']
-const TYPES_BY_FAMILY: Record<string, string[]> = {
-  'option 1': ['option 1.1', 'option 1.2', 'option 1.3', 'option 1.4', 'option 1.5'],
-  'option 2': ['option 2.1', 'option 2.2', 'option 2.3', 'option 2.4'],
+// ── Placeholder option maps ───────────────────────────────────────────────────
+
+const AM_FAMILIES = ['Family A', 'Family B']
+
+const AM_TYPES_BY_FAMILY: Record<string, string[]> = {
+  'Family A': ['Type A1', 'Type A2', 'Type A3'],
+  'Family B': ['Type B1', 'Type B2'],
 }
-const MATERIALS = ['material 1', 'material 2', 'material 3', 'material 4', 'material 5']
+
+const AM_MATERIALS_BY_TYPE: Record<string, string[]> = {
+  'Type A1': ['Material A1a', 'Material A1b'],
+  'Type A2': ['Material A2a', 'Material A2b'],
+  'Type A3': ['Material A3a', 'Material A3b'],
+  'Type B1': ['Material B1a', 'Material B1b'],
+  'Type B2': ['Material B2a', 'Material B2b'],
+}
+
+const COATINGS = ['Coating 1', 'Coating 2', 'Coating 3']
+
+const ELECTROLYTE_FAMILIES_INORGANIC = ['Inorganic Family 1', 'Inorganic Family 2']
+const ELECTROLYTE_SUBCATEGORIES_INORGANIC: Record<string, string[]> = {
+  'Inorganic Family 1': ['Inorganic Sub 1A', 'Inorganic Sub 1B'],
+  'Inorganic Family 2': ['Inorganic Sub 2A', 'Inorganic Sub 2B'],
+}
+const ELECTROLYTE_MATERIALS_INORGANIC: Record<string, string[]> = {
+  'Inorganic Sub 1A': ['Inorganic Mat 1A-i', 'Inorganic Mat 1A-ii'],
+  'Inorganic Sub 1B': ['Inorganic Mat 1B-i', 'Inorganic Mat 1B-ii'],
+  'Inorganic Sub 2A': ['Inorganic Mat 2A-i', 'Inorganic Mat 2A-ii'],
+  'Inorganic Sub 2B': ['Inorganic Mat 2B-i', 'Inorganic Mat 2B-ii'],
+}
+
+const ELECTROLYTE_FAMILIES_ORGANIC = ['Organic Family 1', 'Organic Family 2']
+const ELECTROLYTE_SUBCATEGORIES_ORGANIC: Record<string, string[]> = {
+  'Organic Family 1': ['Organic Sub 1A', 'Organic Sub 1B'],
+  'Organic Family 2': ['Organic Sub 2A', 'Organic Sub 2B'],
+}
+const ELECTROLYTE_MATERIALS_ORGANIC: Record<string, string[]> = {
+  'Organic Sub 1A': ['Organic Mat 1A-i', 'Organic Mat 1A-ii'],
+  'Organic Sub 1B': ['Organic Mat 1B-i', 'Organic Mat 1B-ii'],
+  'Organic Sub 2A': ['Organic Mat 2A-i', 'Organic Mat 2A-ii'],
+  'Organic Sub 2B': ['Organic Mat 2B-i', 'Organic Mat 2B-ii'],
+}
+
+const BINDERS = ['Binder 1', 'Binder 2', 'Binder 3']
+
+const IONIC_SALT_FAMILIES = ['Salt Family 1', 'Salt Family 2']
+const IONIC_SALT_MATERIALS: Record<string, string[]> = {
+  'Salt Family 1': ['Salt 1A', 'Salt 1B'],
+  'Salt Family 2': ['Salt 2A', 'Salt 2B'],
+}
+
+const ADDITIVE_FAMILIES = ['Additive Family 1', 'Additive Family 2']
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+const sectionHeader = (title: string) => (
+  <p style={{
+    fontSize: '.78rem',
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '.06em',
+    color: 'var(--text-3)',
+    paddingBottom: '6px',
+    borderBottom: '1px solid var(--border)',
+    marginBottom: '2px',
+  }}>
+    {title}
+  </p>
+)
+
+const wtPctInput = (value: string, onChange: (v: string) => void) => (
+  <Field label="Weight" unit="%">
+    <input
+      type="number"
+      min={0}
+      max={100}
+      step="any"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder="e.g. 80"
+    />
+  </Field>
+)
+
+function DependentSelect({
+  label,
+  value,
+  options,
+  disabled,
+  disabledHint,
+  onChange,
+}: {
+  label: string
+  value: string
+  options: string[]
+  disabled: boolean
+  disabledHint: string
+  onChange: (v: string) => void
+}) {
+  return (
+    <Field label={label}>
+      <select
+        value={value}
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.value)}
+        style={disabled ? { opacity: 0.45, cursor: 'not-allowed' } : undefined}
+        title={disabled ? disabledHint : undefined}
+      >
+        <option value="">{disabled ? disabledHint : `Select ${label.toLowerCase()}`}</option>
+        {options.map((o) => <option key={o}>{o}</option>)}
+      </select>
+    </Field>
+  )
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
 
 interface Props {
   data: AnodeData
@@ -21,55 +131,229 @@ export function AnodeComposition({ data, onChange }: Props) {
       Number(data.amCompositionPct) > 100)
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-      <Field label="Family">
-        <select
-          value={data.family}
-          onChange={(e) => onChange({ family: e.target.value, type: '', material: '' })}
-        >
-          <option value="">Select a family</option>
-          {FAMILIES.map((family) => <option key={family}>{family}</option>)}
-        </select>
-      </Field>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
-      <Field label="Type">
-        <select
-          className="dependent-select"
+      {/* ── Active Material ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {sectionHeader('Active Material')}
+
+        <Field label="Family">
+          <select
+            value={data.family}
+            onChange={(e) => onChange({ family: e.target.value, type: '', material: '' })}
+          >
+            <option value="">Select a family</option>
+            {AM_FAMILIES.map((f) => <option key={f}>{f}</option>)}
+          </select>
+        </Field>
+
+        <DependentSelect
+          label="Type"
           value={data.type}
+          options={AM_TYPES_BY_FAMILY[data.family] ?? []}
           disabled={!data.family}
-          onChange={(e) => onChange({ type: e.target.value, material: '' })}
-        >
-          <option value="">Select a type</option>
-          {(TYPES_BY_FAMILY[data.family] ?? []).map((type) => (
-            <option key={type}>{type}</option>
-          ))}
-        </select>
-      </Field>
-
-      <Field label="Material">
-        <select
-          className="dependent-select"
-          value={data.material}
-          disabled={!data.type}
-          onChange={(e) => onChange({ material: e.target.value as AnodeData['material'] })}
-        >
-          <option value="">Select a material</option>
-          {MATERIALS.map((material) => <option key={material}>{material}</option>)}
-        </select>
-      </Field>
-
-      <Field label="AM composition %" unit="%">
-        <input
-          type="number"
-          min={0}
-          max={100}
-          step="any"
-          value={data.amCompositionPct}
-          aria-invalid={amCompositionIsInvalid}
-          onChange={(e) => onChange({ amCompositionPct: e.target.value })}
-          style={amCompositionIsInvalid ? { color: 'var(--danger, #d33)', borderColor: 'var(--danger, #d33)' } : undefined}
+          disabledHint="Select a family first"
+          onChange={(v) => onChange({ type: v, material: '' })}
         />
-      </Field>
+
+        <DependentSelect
+          label="Material"
+          value={data.material}
+          options={AM_MATERIALS_BY_TYPE[data.type] ?? []}
+          disabled={!data.type}
+          disabledHint="Select a type first"
+          onChange={(v) => onChange({ material: v as AnodeData['material'] })}
+        />
+
+        <Field label="AM composition" unit="%">
+          <input
+            type="number"
+            min={0}
+            max={100}
+            step="any"
+            value={data.amCompositionPct}
+            aria-invalid={amCompositionIsInvalid}
+            onChange={(e) => onChange({ amCompositionPct: e.target.value })}
+            style={amCompositionIsInvalid
+              ? { color: 'var(--danger, #d33)', borderColor: 'var(--danger, #d33)' }
+              : undefined}
+          />
+        </Field>
+      </div>
+
+      {/* ── Anode Active Material Coating ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {sectionHeader('Anode Active Material Coating')}
+
+        <Field label="Coating">
+          <select
+            value={data.coating}
+            onChange={(e) => onChange({ coating: e.target.value })}
+          >
+            <option value="">Select a coating</option>
+            {COATINGS.map((c) => <option key={c}>{c}</option>)}
+          </select>
+        </Field>
+      </div>
+
+      {/* ── Electrolyte ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {sectionHeader('Electrolyte')}
+
+        {/* Inorganic chain */}
+        <Field label="Inorganic family">
+          <select
+            value={data.electrolyteFamilyInorganic}
+            onChange={(e) => onChange({
+              electrolyteFamilyInorganic: e.target.value,
+              electrolyteInorganicSubcategory: '',
+              electrolyteInorganicMaterial: '',
+            })}
+          >
+            <option value="">Select a family</option>
+            {ELECTROLYTE_FAMILIES_INORGANIC.map((f) => <option key={f}>{f}</option>)}
+          </select>
+        </Field>
+
+        <DependentSelect
+          label="Inorganic subcategory"
+          value={data.electrolyteInorganicSubcategory}
+          options={ELECTROLYTE_SUBCATEGORIES_INORGANIC[data.electrolyteFamilyInorganic] ?? []}
+          disabled={!data.electrolyteFamilyInorganic}
+          disabledHint="Select an inorganic family first"
+          onChange={(v) => onChange({ electrolyteInorganicSubcategory: v, electrolyteInorganicMaterial: '' })}
+        />
+
+        <DependentSelect
+          label="Inorganic material"
+          value={data.electrolyteInorganicMaterial}
+          options={ELECTROLYTE_MATERIALS_INORGANIC[data.electrolyteInorganicSubcategory] ?? []}
+          disabled={!data.electrolyteInorganicSubcategory}
+          disabledHint="Select an inorganic subcategory first"
+          onChange={(v) => onChange({ electrolyteInorganicMaterial: v })}
+        />
+
+        {wtPctInput(data.electrolyteInorganicWtPct, (v) => onChange({ electrolyteInorganicWtPct: v }))}
+
+        {/* Organic chain */}
+        <Field label="Organic family" style={{ marginTop: '6px' }}>
+          <select
+            value={data.electrolyteFamilyOrganic}
+            onChange={(e) => onChange({
+              electrolyteFamilyOrganic: e.target.value,
+              electrolyteOrganicSubcategory: '',
+              electrolyteOrganicMaterial: '',
+            })}
+          >
+            <option value="">Select a family</option>
+            {ELECTROLYTE_FAMILIES_ORGANIC.map((f) => <option key={f}>{f}</option>)}
+          </select>
+        </Field>
+
+        <DependentSelect
+          label="Organic subcategory"
+          value={data.electrolyteOrganicSubcategory}
+          options={ELECTROLYTE_SUBCATEGORIES_ORGANIC[data.electrolyteFamilyOrganic] ?? []}
+          disabled={!data.electrolyteFamilyOrganic}
+          disabledHint="Select an organic family first"
+          onChange={(v) => onChange({ electrolyteOrganicSubcategory: v, electrolyteOrganicMaterial: '' })}
+        />
+
+        <DependentSelect
+          label="Organic material"
+          value={data.electrolyteOrganicMaterial}
+          options={ELECTROLYTE_MATERIALS_ORGANIC[data.electrolyteOrganicSubcategory] ?? []}
+          disabled={!data.electrolyteOrganicSubcategory}
+          disabledHint="Select an organic subcategory first"
+          onChange={(v) => onChange({ electrolyteOrganicMaterial: v })}
+        />
+
+        {wtPctInput(data.electrolyteOrganicWtPct, (v) => onChange({ electrolyteOrganicWtPct: v }))}
+      </div>
+
+      {/* ── Binder ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {sectionHeader('Binder')}
+
+        <Field label="Binder">
+          <select
+            value={data.binder}
+            onChange={(e) => onChange({ binder: e.target.value })}
+          >
+            <option value="">Select a binder</option>
+            {BINDERS.map((b) => <option key={b}>{b}</option>)}
+          </select>
+        </Field>
+
+        {wtPctInput(data.binderWtPct, (v) => onChange({ binderWtPct: v }))}
+      </div>
+
+      {/* ── Ionic Salt ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {sectionHeader('Ionic Salt')}
+
+        <Field label="Family">
+          <select
+            value={data.ionicSaltFamily}
+            onChange={(e) => onChange({ ionicSaltFamily: e.target.value, ionicSaltMaterial: '' })}
+          >
+            <option value="">Select a family</option>
+            {IONIC_SALT_FAMILIES.map((f) => <option key={f}>{f}</option>)}
+          </select>
+        </Field>
+
+        <DependentSelect
+          label="Material"
+          value={data.ionicSaltMaterial}
+          options={IONIC_SALT_MATERIALS[data.ionicSaltFamily] ?? []}
+          disabled={!data.ionicSaltFamily}
+          disabledHint="Select a family first"
+          onChange={(v) => onChange({ ionicSaltMaterial: v })}
+        />
+
+        {wtPctInput(data.ionicSaltWtPct, (v) => onChange({ ionicSaltWtPct: v }))}
+      </div>
+
+      {/* ── Additive ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {sectionHeader('Additive')}
+
+        <Field label="Family">
+          <select
+            value={data.additiveFamily}
+            onChange={(e) => onChange({ additiveFamily: e.target.value })}
+          >
+            <option value="">Select a family</option>
+            {ADDITIVE_FAMILIES.map((f) => <option key={f}>{f}</option>)}
+          </select>
+        </Field>
+
+        <Field label="Material">
+          <input
+            type="text"
+            value={data.additiveMaterial}
+            onChange={(e) => onChange({ additiveMaterial: e.target.value })}
+            placeholder="e.g. additive name or formula"
+          />
+        </Field>
+
+        {wtPctInput(data.additiveWtPct, (v) => onChange({ additiveWtPct: v }))}
+      </div>
+
+      {/* ── Comments ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {sectionHeader('Comments')}
+
+        <Field label="Comments" optional>
+          <textarea
+            value={data.compositionComments}
+            onChange={(e) => onChange({ compositionComments: e.target.value })}
+            placeholder="Any notes about this anode composition…"
+            style={{ minHeight: '80px' }}
+          />
+        </Field>
+      </div>
+
     </div>
   )
 }

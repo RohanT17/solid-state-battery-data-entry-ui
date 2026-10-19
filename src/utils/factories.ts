@@ -11,10 +11,43 @@ import type {
 export const uid = () => Math.random().toString(36).slice(2, 9)
 
 export const emptyAnode = (): AnodeData => ({
-  material: '',
+  // Active Material
   family: '',
   type: '',
+  material: '',
   amCompositionPct: '',
+
+  // Coating
+  coating: '',
+
+  // Electrolyte
+  electrolyteFamilyInorganic: '',
+  electrolyteInorganicSubcategory: '',
+  electrolyteInorganicMaterial: '',
+  electrolyteInorganicWtPct: '',
+  electrolyteFamilyOrganic: '',
+  electrolyteOrganicSubcategory: '',
+  electrolyteOrganicMaterial: '',
+  electrolyteOrganicWtPct: '',
+
+  // Binder
+  binder: '',
+  binderWtPct: '',
+
+  // Ionic Salt
+  ionicSaltFamily: '',
+  ionicSaltMaterial: '',
+  ionicSaltWtPct: '',
+
+  // Additive
+  additiveFamily: '',
+  additiveMaterial: '',
+  additiveWtPct: '',
+
+  // Comments
+  compositionComments: '',
+
+  // Layers
   thicknessUm: '',
   loadingMgCm2: '',
   porosityPct: '',

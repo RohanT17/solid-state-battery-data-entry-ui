@@ -6,7 +6,7 @@ interface Props {
   onChange: (patch: Partial<AnodeData>) => void
 }
 
-export function AnodeDetails({ data, onChange }: Props) {
+export function AnodeLayers({ data, onChange }: Props) {
   const set =
     (key: keyof AnodeData) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
