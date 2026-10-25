@@ -99,12 +99,13 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate }:
 
         {/* Tab content */}
         <div className="battery-card-content">
-          {activeTab === 'anode' && (
+            {activeTab === 'anode' && (
             <AnodeTab
-              data={battery.anode}
-              onChange={(p) => onChange('anode', p as Record<string, string>)}
+                data={battery.anode}
+                onChange={(p) => onChange('anode', p as Record<string, string>)}
+                onNextMainTab={() => setActiveTab('cathode')}
             />
-          )}
+            )}
           {activeTab === 'cathode' && (
             <CathodeTab
               data={battery.cathode}
