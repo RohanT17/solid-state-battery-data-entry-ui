@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import type { AppState, AppScreen, Paper, BatterySection } from '@/types'
 import { emptyPaper, emptyBattery, duplicateBattery } from '@/utils/factories'
+import { loadState, saveState, clearSavedState } from '@/utils/storage'
 
 const initialState: AppState = {
   screen: 'papers',
@@ -10,7 +11,11 @@ const initialState: AppState = {
 }
 
 export function useAppState() {
-  const [state, setState] = useState<AppState>(initialState)
+  const [state, setState] = useState<AppState>(() => loadState(initialState))
+
+  useEffect(() => {
+    saveState(state)
+  }, [state])
 
   // ── Navigation ──────────────────────────────────────────────────────────────
   const setScreen = useCallback((screen: AppScreen) => {
@@ -82,6 +87,11 @@ export function useAppState() {
     })
   }, [])
 
+  const resetAll = useCallback(() => {
+    clearSavedState()
+    setState(initialState)
+  }, [])
+
   return {
     state,
     setScreen,
@@ -93,5 +103,6 @@ export function useAppState() {
     updateBattery,
     removeBattery,
     dupeBattery,
+    resetAll,
   }
 }

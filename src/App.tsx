@@ -24,6 +24,7 @@ export default function App() {
     updateBattery,
     removeBattery,
     dupeBattery,
+    resetAll,
   } = useAppState()
 
   const { screen, papers, batteries, activePaperId } = state
@@ -80,9 +81,24 @@ export default function App() {
                   Each paper groups one or more batteries. Paper metadata repeats on every CSV row.
                 </p>
               </div>
-              <Button variant="primary" onClick={addPaper}>
-                + Add paper
-              </Button>
+              <div style={{ display: 'flex', gap: '.5rem' }}>
+                {(papers.length > 0 || batteries.length > 0) && (
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => {
+                      if (window.confirm('Clear all saved papers and batteries? This cannot be undone.')) {
+                        resetAll()
+                      }
+                    }}
+                  >
+                    Clear saved data
+                  </Button>
+                )}
+                <Button variant="primary" onClick={addPaper}>
+                  + Add paper
+                </Button>
+              </div>
             </div>
 
             {papers.length === 0 && (
