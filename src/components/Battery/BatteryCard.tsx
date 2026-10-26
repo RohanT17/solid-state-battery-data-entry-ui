@@ -1,22 +1,21 @@
 import { useState } from 'react'
 import type { Battery, BatterySection } from '@/types'
 import { Collapsible, Badge, Button, StatusDot, Divider } from '@/components/UI'
-import { AnodeTab } from './tabs/Anode/AnodeTab'
-import { CathodeTab } from './tabs/CathodeTab'
-import { SeparatorTab } from './tabs/SeparatorTab'
-import { AssemblyTab } from './tabs/AssemblyTab'
-import { MeasurementTab } from './tabs/MeasurementTab'
+import { AnodeTab }       from './tabs/Anode/AnodeTab'
+import { CathodeTab }     from './tabs/CathodeTab'
+import { SeparatorTab }   from './tabs/SeparatorTab'
+import { AssemblyTab }    from './tabs/AssemblyTab'
+import { MeasurementTab } from './tabs/Measurement/MeasurementTab'
 import '../../styles/button.css'
 
-// Heuristic: section is "filled" if at least one required field is non-empty
 function isFilled(battery: Battery, section: BatterySection): boolean {
   switch (section) {
-    case 'anode':      return !!battery.anode.material && !!battery.anode.thicknessUm
-    case 'cathode':    return !!battery.cathode.material && !!battery.cathode.thicknessUm
-    case 'separator':  return !!battery.separator.material && !!battery.separator.thicknessUm
-    case 'assembly':   return !!battery.assembly.cellFormat && !!battery.assembly.electrolyte
-    case 'measurement': return !!battery.measurement.capacityMah && !!battery.measurement.voltageWindow
-    default:           return false
+    case 'anode':       return !!battery.anode.family
+    case 'cathode':     return !!battery.cathode.material && !!battery.cathode.thicknessUm
+    case 'separator':   return !!battery.separator.material && !!battery.separator.thicknessUm
+    case 'assembly':    return !!battery.assembly.cellFormat && !!battery.assembly.electrolyte
+    case 'measurement': return !!battery.measurement.temperatureC
+    default:            return false
   }
 }
 
@@ -34,15 +33,21 @@ interface Props {
   onChange: (section: BatterySection, patch: Record<string, string>) => void
   onRemove: () => void
   onDuplicate: () => void
+  onDone: () => void  // called when user finishes the last measurement subtab
 }
 
-export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate }: Props) {
+export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, onDone }: Props) {
   const [activeTab, setActiveTab] = useState<BatterySection>('anode')
 
   const filledCount = TABS.filter((t) => isFilled(battery, t.key)).length
   const allFilled = filledCount === TABS.length
 
-  const summary = `${battery.anode.material} / ${battery.cathode.material}`
+  const summary = `${battery.anode.family || '—'} / ${battery.cathode.material || '—'}`
+
+  const advanceMainTab = () => {
+    const idx = TABS.findIndex((t) => t.key === activeTab)
+    if (idx < TABS.length - 1) setActiveTab(TABS[idx + 1].key)
+  }
 
   const header = (
     <div className="battery-card-header">
@@ -50,16 +55,12 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate }:
         <div className="battery-card-title">
           Battery #{index + 1}
           <span className="battery-card-status">
-          <Badge
-            variant={allFilled ? 'success' : filledCount > 0 ? 'warning' : 'neutral'}
-          >
-            {allFilled ? 'Complete' : filledCount > 0 ? `${filledCount}/5 sections` : 'Empty'}
-          </Badge>
+            <Badge variant={allFilled ? 'success' : filledCount > 0 ? 'warning' : 'neutral'}>
+              {allFilled ? 'Complete' : filledCount > 0 ? `${filledCount}/5 sections` : 'Empty'}
+            </Badge>
           </span>
         </div>
-        <div className="battery-card-summary">
-          {summary}
-        </div>
+        <div className="battery-card-summary">{summary}</div>
       </div>
       <div className="battery-card-actions">
         <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDuplicate() }}>
@@ -97,15 +98,15 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate }:
           })}
         </nav>
 
-        {/* Tab content */}
+                {/* Tab content — anode and measurement own their Next button internally */}
         <div className="battery-card-content">
-            {activeTab === 'anode' && (
+          {activeTab === 'anode' && (
             <AnodeTab
-                data={battery.anode}
-                onChange={(p) => onChange('anode', p as Record<string, string>)}
-                onNextMainTab={() => setActiveTab('cathode')}
+              data={battery.anode}
+              onChange={(p) => onChange('anode', p as Record<string, string>)}
+              onNextMainTab={advanceMainTab}
             />
-            )}
+          )}
           {activeTab === 'cathode' && (
             <CathodeTab
               data={battery.cathode}
@@ -128,24 +129,24 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate }:
             <MeasurementTab
               data={battery.measurement}
               onChange={(p) => onChange('measurement', p as Record<string, string>)}
+              onNextMainTab={onDone}
             />
           )}
 
-          <Divider className="battery-card-divider" />
-          <div className="battery-card-next-action">
-            {activeTab !== 'measurement' && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  const idx = TABS.findIndex((t) => t.key === activeTab)
-                  if (idx < TABS.length - 1) setActiveTab(TABS[idx + 1].key)
-                }}
-              >
-                Next section →
-              </Button>
-            )}
-          </div>
+          {activeTab !== 'measurement' && (
+            <>
+              <Divider className="battery-card-divider" />
+              <div className="battery-card-next-action">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={advanceMainTab}
+                >
+                  Next section →
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Collapsible>
