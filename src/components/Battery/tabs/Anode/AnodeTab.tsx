@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { AnodeData } from '@/types'
-import { AnodeLayers } from './AnodeLayers'
+import { AnodeLayer } from './AnodeLayer'
 import { AnodeComposition } from './AnodeComposition'
 
 interface Props {
@@ -9,11 +9,11 @@ interface Props {
   onNextMainTab: () => void
 }
 
-type AnodeSubTab = 'composition' | 'layers'
+type AnodeSubTab = 'composition' | 'layer'
 
 const SUB_TABS: { key: AnodeSubTab; label: string }[] = [
   { key: 'composition', label: 'Composition' },
-  { key: 'layers',      label: 'Layers' },
+  { key: 'layer',      label: 'Layer Properties' },
 ]
 
 export function AnodeTab({ data, onChange, onNextMainTab }: Props) {
@@ -21,13 +21,13 @@ export function AnodeTab({ data, onChange, onNextMainTab }: Props) {
 
   const handleNext = () => {
     if (activeSubTab === 'composition') {
-      setActiveSubTab('layers')
+      setActiveSubTab('layer')
     } else {
       onNextMainTab()
     }
   }
 
-  const nextLabel = activeSubTab === 'composition' ? 'Next: Layers →' : 'Next: Cathode →'
+  const nextLabel = activeSubTab === 'composition' ? 'Next: Layer Properties →' : 'Next: Cathode →'
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -62,7 +62,7 @@ export function AnodeTab({ data, onChange, onNextMainTab }: Props) {
       <div>
         {activeSubTab === 'composition'
           ? <AnodeComposition data={data} onChange={onChange} />
-          : <AnodeLayers data={data} onChange={onChange} />
+          : <AnodeLayer data={data} onChange={onChange} />
         }
       </div>
 

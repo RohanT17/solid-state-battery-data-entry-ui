@@ -20,7 +20,7 @@ interface Props {
   onChange: (patch: Partial<SeparatorData>) => void
 }
 
-export function SeparatorLayers({ data, onChange }: Props) {
+export function SeparatorLayer({ data, onChange }: Props) {
   const set =
     (key: keyof SeparatorData) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>

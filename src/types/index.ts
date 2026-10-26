@@ -21,6 +21,7 @@ export type AnodeMaterial = '' | 'material 1' | 'material 2' | 'material 3' | 'm
 export type CathodeMaterial = 'LFP' | 'NMC' | 'NCA' | 'LCO' | 'Other'
 export type SeparatorPolishTreatment = '' | 'Wet' | 'Dry' | 'Mixed (Wet + Dry)' | 'None'
 export type CellCasingType = '' | 'Coin' | 'Pouch' | 'Split Cell' | 'Other'
+export type CycleLifeCriteria = 'Failure' | '80% capacity retention' | 'End of graph' | ''
 
 export interface AnodeData {
   family: string

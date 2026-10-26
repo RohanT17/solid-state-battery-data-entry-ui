@@ -3,18 +3,35 @@ import type { Battery, BatterySection } from '@/types'
 import { Collapsible, Badge, Button, StatusDot, Divider } from '@/components/UI'
 import { AnodeTab }       from './tabs/Anode/AnodeTab'
 import { CathodeTab }     from './tabs/CathodeTab'
-import { SeparatorTab }   from './tabs/SeparatorTab'
+import { SeparatorTab }   from './tabs/Separator/SeparatorTab'
 import { AssemblyTab }    from './tabs/AssemblyTab'
 import { MeasurementTab } from './tabs/Measurement/MeasurementTab'
 import '../../styles/button.css'
 
 function isFilled(battery: Battery, section: BatterySection): boolean {
+  const isFilledValue = (v: unknown): boolean => {
+    if (Array.isArray(v)) return v.length > 0 && v.every((item) =>
+      Object.entries(item)
+        .filter(([key]) => key !== 'id')
+        .every(([, val]) => isFilledValue(val))
+    )
+    if (typeof v === 'string') return v.trim() !== ''
+    return true
+  }
+
+  const ignoreKeys = new Set(['compositionComments', 'conditionsComments', 'clcComments', 'clvComments', 'layerComments', 'comments'])
+
+  const allFilled = (obj: Record<string, unknown>) =>
+    Object.entries(obj)
+      .filter(([key]) => !ignoreKeys.has(key))
+      .every(([, val]) => isFilledValue(val))
+
   switch (section) {
-    case 'anode':       return !!battery.anode.family
-    case 'cathode':     return !!battery.cathode.material && !!battery.cathode.thicknessUm
-    case 'separator':   return !!battery.separator.material && !!battery.separator.thicknessUm
-    case 'assembly':    return !!battery.assembly.cellFormat && !!battery.assembly.electrolyte
-    case 'measurement': return !!battery.measurement.temperatureC
+    case 'anode':       return allFilled(battery.anode as unknown as Record<string, unknown>)
+    case 'cathode':     return allFilled(battery.cathode as unknown as Record<string, unknown>)
+    case 'separator':   return allFilled(battery.separator as unknown as Record<string, unknown>)
+    case 'assembly':    return allFilled(battery.assembly as unknown as Record<string, unknown>)
+    case 'measurement': return allFilled(battery.measurement as unknown as Record<string, unknown>)
     default:            return false
   }
 }
@@ -117,6 +134,7 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, o
             <SeparatorTab
               data={battery.separator}
               onChange={(p) => onChange('separator', p as Record<string, string>)}
+              onNextMainTab={advanceMainTab}
             />
           )}
           {activeTab === 'assembly' && (
