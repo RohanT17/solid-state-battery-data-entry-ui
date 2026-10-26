@@ -35,3 +35,5 @@ yarn-error.log*
 # Miscellaneous
 *.pem
 .DS_Store
+plan.md
+directions.md

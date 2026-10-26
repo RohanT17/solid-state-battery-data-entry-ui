@@ -80,9 +80,31 @@ export interface CathodeData {
 }
 
 export interface SeparatorData {
+  // Layer Properties
   material: SeparatorMaterial
   thicknessUm: string
   porosityPct: string
+
+  // Composition — Electrolyte
+  electrolyteFamily: string
+  electrolyteInorganicSubcategory: string
+  electrolyteInorganicMaterial: string
+  electrolyteInorganicCompositionPct: string
+  electrolyteOrganicSubcategory: string
+  electrolyteOrganicMaterial: string
+  electrolyteOrganicCompositionPct: string
+
+  // Composition — Binder
+  binder: string
+  binderCompositionPct: string
+
+  // Composition — Ionic Salt
+  ionicSaltFamily: string
+  ionicSaltMaterial: string
+  ionicSaltCompositionPct: string
+
+  // Composition — Comments
+  compositionComments: string
 }
 
 export interface AssemblyData {

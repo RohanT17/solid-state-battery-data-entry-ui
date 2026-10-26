@@ -15,7 +15,7 @@ interface Props {
   onChange: (patch: Partial<SeparatorData>) => void
 }
 
-export function SeparatorTab({ data, onChange }: Props) {
+export function SeparatorLayers({ data, onChange }: Props) {
   const set =
     (key: keyof SeparatorData) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
