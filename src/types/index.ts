@@ -19,15 +19,8 @@ export type PaperDraft = Omit<Paper, 'id'>
 
 export type AnodeMaterial = '' | 'material 1' | 'material 2' | 'material 3' | 'material 4' | 'material 5'
 export type CathodeMaterial = 'LFP' | 'NMC' | 'NCA' | 'LCO' | 'Other'
-export type SeparatorMaterial =
-  | 'Celgard 2325 (PP/PE/PP)'
-  | 'Celgard 2400 (PP)'
-  | 'Glass fiber'
-  | 'Ceramic-coated'
-  | 'Solid electrolyte'
-  | 'Other'
-export type CellFormat = 'Coin cell' | 'Pouch' | 'Cylindrical' | 'Prismatic'
-export type CycleLifeCriteria = 'Failure' | '80% capacity retention' | 'End of graph' | ''
+export type SeparatorPolishTreatment = '' | 'Wet' | 'Dry' | 'Mixed (Wet + Dry)' | 'None'
+export type CellCasingType = '' | 'Coin' | 'Pouch' | 'Split Cell' | 'Other'
 
 export interface AnodeData {
   family: string
@@ -66,16 +59,48 @@ export interface CathodeData {
 }
 
 export interface SeparatorData {
-  material: SeparatorMaterial
+  // Layer Properties
+  preparationMethod: string
+  heatTreatmentTempC: string
+  pressPressureMpa: string
   thicknessUm: string
-  porosityPct: string
+  polishTreatment: SeparatorPolishTreatment
+  finestPolishGritUm: string
+  sinteringTempC: string
+  sinteringTimeHrs: string
+  areaCm2: string
+  conductivity25C: string
+  surfaceRoughness: string
+  densityGCm3: string
+  layerComments: string
+
+  // Composition — Electrolyte
+  electrolyteFamily: string
+  electrolyteInorganicSubcategory: string
+  electrolyteInorganicMaterial: string
+  electrolyteInorganicCompositionPct: string
+  electrolyteOrganicSubcategory: string
+  electrolyteOrganicMaterial: string
+  electrolyteOrganicCompositionPct: string
+
+  // Composition — Binder
+  binder: string
+  binderCompositionPct: string
+
+  // Composition — Ionic Salt
+  ionicSaltFamily: string
+  ionicSaltMaterial: string
+  ionicSaltCompositionPct: string
+
+  // Composition — Comments
+  compositionComments: string
 }
 
 export interface AssemblyData {
-  cellFormat: CellFormat
-  electrolyte: string
-  electrolyteVolumeUl: string
-  stackPressureMpa: string
+  cellCasingType: CellCasingType
+  heatTreatmentTempC: string
+  appliedPressureMpa: string
+  comments: string
 }
 
 // ── Measurement sub-types ─────────────────────────────────────────────────────

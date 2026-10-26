@@ -59,16 +59,48 @@ export const emptyCathode = (): CathodeData => ({
 })
 
 export const emptySeparator = (): SeparatorData => ({
-  material: 'Celgard 2325 (PP/PE/PP)',
+  // Layer Properties
+  preparationMethod: '',
+  heatTreatmentTempC: '',
+  pressPressureMpa: '',
   thicknessUm: '',
-  porosityPct: '',
+  polishTreatment: '',
+  finestPolishGritUm: '',
+  sinteringTempC: '',
+  sinteringTimeHrs: '',
+  areaCm2: '',
+  conductivity25C: '',
+  surfaceRoughness: '',
+  densityGCm3: '',
+  layerComments: '',
+
+  // Electrolyte
+  electrolyteFamily: '',
+  electrolyteInorganicSubcategory: '',
+  electrolyteInorganicMaterial: '',
+  electrolyteInorganicCompositionPct: '',
+  electrolyteOrganicSubcategory: '',
+  electrolyteOrganicMaterial: '',
+  electrolyteOrganicCompositionPct: '',
+
+  // Binder
+  binder: '',
+  binderCompositionPct: '',
+
+  // Ionic Salt
+  ionicSaltFamily: '',
+  ionicSaltMaterial: '',
+  ionicSaltCompositionPct: '',
+
+  // Comments
+  compositionComments: '',
 })
 
 export const emptyAssembly = (): AssemblyData => ({
-  cellFormat: 'Coin cell',
-  electrolyte: '',
-  electrolyteVolumeUl: '',
-  stackPressureMpa: '',
+  cellCasingType: '',
+  heatTreatmentTempC: '',
+  appliedPressureMpa: '',
+  comments: '',
 })
 
 export const emptyMeasurement = (): MeasurementData => ({

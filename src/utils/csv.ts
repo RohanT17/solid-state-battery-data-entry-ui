@@ -30,16 +30,41 @@ function flatten(paper: Paper, battery: Battery): Record<string, string> {
     cathode_nmc_ratio: battery.cathode.nmcRatio,
     cathode_loading_mg_cm2: battery.cathode.loadingMgCm2,
 
-    // Separator
-    separator_material: battery.separator.material,
+    // Separator — Layer Properties
+    separator_preparation_method: battery.separator.preparationMethod,
+    separator_heat_treatment_temp_c: battery.separator.heatTreatmentTempC,
+    separator_press_pressure_mpa: battery.separator.pressPressureMpa,
     separator_thick_um: battery.separator.thicknessUm,
-    separator_porosity_pct: battery.separator.porosityPct,
+    separator_polish_treatment: battery.separator.polishTreatment,
+    separator_finest_polish_grit_um: battery.separator.finestPolishGritUm,
+    separator_sintering_temp_c: battery.separator.sinteringTempC,
+    separator_sintering_time_hrs: battery.separator.sinteringTimeHrs,
+    separator_area_cm2: battery.separator.areaCm2,
+    separator_conductivity_25c_s_cm: battery.separator.conductivity25C,
+    separator_surface_roughness: battery.separator.surfaceRoughness,
+    separator_density_g_cm3: battery.separator.densityGCm3,
+    separator_layer_comments: battery.separator.layerComments,
+
+    // Separator — Composition
+    separator_electrolyte_family: battery.separator.electrolyteFamily,
+    separator_electrolyte_inorganic_subcategory: battery.separator.electrolyteInorganicSubcategory,
+    separator_electrolyte_inorganic_material: battery.separator.electrolyteInorganicMaterial,
+    separator_electrolyte_inorganic_composition_pct: battery.separator.electrolyteInorganicCompositionPct,
+    separator_electrolyte_organic_subcategory: battery.separator.electrolyteOrganicSubcategory,
+    separator_electrolyte_organic_material: battery.separator.electrolyteOrganicMaterial,
+    separator_electrolyte_organic_composition_pct: battery.separator.electrolyteOrganicCompositionPct,
+    separator_binder: battery.separator.binder,
+    separator_binder_composition_pct: battery.separator.binderCompositionPct,
+    separator_ionic_salt_family: battery.separator.ionicSaltFamily,
+    separator_ionic_salt_material: battery.separator.ionicSaltMaterial,
+    separator_ionic_salt_composition_pct: battery.separator.ionicSaltCompositionPct,
+    separator_composition_comments: battery.separator.compositionComments,
 
     // Assembly
-    cell_format: battery.assembly.cellFormat,
-    electrolyte: battery.assembly.electrolyte,
-    electrolyte_vol_ul: battery.assembly.electrolyteVolumeUl,
-    stack_pressure_mpa: battery.assembly.stackPressureMpa,
+    cell_casing_type: battery.assembly.cellCasingType,
+    assembly_heat_treatment_temp_c: battery.assembly.heatTreatmentTempC,
+    assembly_applied_pressure_mpa: battery.assembly.appliedPressureMpa,
+    assembly_comments: battery.assembly.comments,
 
     // Measurement
     capacity_mah: battery.measurement.capacityMah,
