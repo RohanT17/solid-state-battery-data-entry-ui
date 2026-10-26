@@ -23,16 +23,11 @@ export type SeparatorPolishTreatment = '' | 'Wet' | 'Dry' | 'Mixed (Wet + Dry)' 
 export type CellCasingType = '' | 'Coin' | 'Pouch' | 'Split Cell' | 'Other'
 
 export interface AnodeData {
-  // Composition — Active Material
   family: string
   type: string
   material: AnodeMaterial
   amCompositionPct: string
-
-  // Composition — Coating
   coating: string
-
-  // Composition — Electrolyte
   electrolyteFamilyInorganic: string
   electrolyteInorganicSubcategory: string
   electrolyteInorganicMaterial: string
@@ -41,25 +36,15 @@ export interface AnodeData {
   electrolyteOrganicSubcategory: string
   electrolyteOrganicMaterial: string
   electrolyteOrganicWtPct: string
-
-  // Composition — Binder
   binder: string
   binderWtPct: string
-
-  // Composition — Ionic Salt
   ionicSaltFamily: string
   ionicSaltMaterial: string
   ionicSaltWtPct: string
-
-  // Composition — Additive
   additiveFamily: string
   additiveMaterial: string
   additiveWtPct: string
-
-  // Composition — Comments
   compositionComments: string
-
-  // Layers
   thicknessUm: string
   loadingMgCm2: string
   porosityPct: string
@@ -118,14 +103,46 @@ export interface AssemblyData {
   comments: string
 }
 
+// ── Measurement sub-types ─────────────────────────────────────────────────────
+
+export interface RateTestEntry {
+  id: string
+  chargeVoltageCutoff: string
+  dischargeVoltageCutoff: string
+  chargingCurrentDensity: string
+  dischargingCurrentDensity: string
+  numCyclesAtDischargingCurrentDensity: string
+  dischargeCapacity: string
+  capacityRetentionPct: string
+}
+
 export interface MeasurementData {
-  capacityMah: string
-  cRateCharge: string
-  cRateDischarge: string
-  voltageWindow: string
+  // Conditions
   temperatureC: string
-  cycles80pct: string
-  icePct: string
+  mechanicalConditionMpa: string
+  conditionsComments: string
+
+  // Cycle Life — Constant Discharge Current Density
+  clcChargeVoltageCutoff: string
+  clcDischargeVoltageCutoff: string
+  clcChargingCurrentDensity: string
+  clcConstantCurrentDensity: string
+  clcArealCapacity: string
+  clcCycleLife: string
+  clcCycleLifeCriteria: CycleLifeCriteria
+  clcTotalDischargeArealCapacity: string
+  clcComments: string
+
+  // Cycle Life — Variable Current Density
+  clvChargeVoltageCutoff: string
+  clvDischargeVoltageCutoff: string
+  clvCycleLife: string
+  clvCycleLifeCriteria: CycleLifeCriteria
+  clvTotalArealCapacity: string
+  clvComments: string
+
+  // Rate Tests (up to 8)
+  rateTests: RateTestEntry[]
 }
 
 // ── Battery ───────────────────────────────────────────────────────────────────

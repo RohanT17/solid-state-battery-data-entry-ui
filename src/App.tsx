@@ -197,6 +197,7 @@ export default function App() {
                   onChange={(section: BatterySection, patch) => updateBattery(b.id, section, patch)}
                   onRemove={() => removeBattery(b.id)}
                   onDuplicate={() => dupeBattery(b.id)}
+                  onDone={() => {}}
                 />
               ))}
             </div>
