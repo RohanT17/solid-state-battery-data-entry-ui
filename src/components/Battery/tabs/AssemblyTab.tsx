@@ -1,7 +1,7 @@
-import type { AssemblyData, CellFormat } from '@/types'
+import type { AssemblyData, CellCasingType } from '@/types'
 import { Field, FormGrid } from '@/components/UI'
 
-const FORMATS: CellFormat[] = ['Coin cell', 'Pouch', 'Cylindrical', 'Prismatic']
+const CASING_TYPES: CellCasingType[] = ['Coin', 'Pouch', 'Split Cell', 'Other']
 
 interface Props {
   data: AssemblyData
@@ -11,32 +11,33 @@ interface Props {
 export function AssemblyTab({ data, onChange }: Props) {
   const set =
     (key: keyof AssemblyData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-      onChange({ [key]: e.target.value })
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+      onChange({ [key]: e.target.value } as Partial<AssemblyData>)
 
   return (
     <FormGrid cols={2}>
-      <Field label="Cell format">
-        <select value={data.cellFormat} onChange={set('cellFormat')}>
-          {FORMATS.map((f) => <option key={f}>{f}</option>)}
+      <Field label="Type of cell casing">
+        <select value={data.cellCasingType} onChange={set('cellCasingType')}>
+          <option value="">Select a casing type</option>
+          {CASING_TYPES.map((c) => <option key={c}>{c}</option>)}
         </select>
       </Field>
 
-      <Field label="Electrolyte">
-        <input
-          type="text"
-          value={data.electrolyte}
-          onChange={set('electrolyte')}
-          placeholder="e.g. 1M LiPF6 in EC/DMC 1:1"
+      <Field label="Heat treatment temp" unit="°C" optional>
+        <input type="number" value={data.heatTreatmentTempC} onChange={set('heatTreatmentTempC')} placeholder="e.g. 100" />
+      </Field>
+
+      <Field label="Applied pressure during assembly" unit="MPa" optional>
+        <input type="number" min={0} step="0.1" value={data.appliedPressureMpa} onChange={set('appliedPressureMpa')} placeholder="e.g. 50" />
+      </Field>
+
+      <Field label="Comments" optional style={{ gridColumn: 'span 2' }}>
+        <textarea
+          value={data.comments}
+          onChange={set('comments')}
+          placeholder="Any notes about this cell's assembly…"
+          style={{ minHeight: '80px' }}
         />
-      </Field>
-
-      <Field label="Electrolyte volume" unit="µL" optional>
-        <input type="number" min={0} value={data.electrolyteVolumeUl} onChange={set('electrolyteVolumeUl')} placeholder="" />
-      </Field>
-
-      <Field label="Stack pressure" unit="MPa" optional>
-        <input type="number" min={0} step="0.1" value={data.stackPressureMpa} onChange={set('stackPressureMpa')} placeholder="" />
       </Field>
     </FormGrid>
   )

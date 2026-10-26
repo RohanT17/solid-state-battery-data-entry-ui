@@ -13,8 +13,8 @@ function isFilled(battery: Battery, section: BatterySection): boolean {
   switch (section) {
     case 'anode':      return !!battery.anode.material && !!battery.anode.thicknessUm
     case 'cathode':    return !!battery.cathode.material && !!battery.cathode.thicknessUm
-    case 'separator':  return !!battery.separator.material && !!battery.separator.thicknessUm
-    case 'assembly':   return !!battery.assembly.cellFormat && !!battery.assembly.electrolyte
+    case 'separator':  return !!battery.separator.preparationMethod && !!battery.separator.thicknessUm
+    case 'assembly':   return !!battery.assembly.cellCasingType
     case 'measurement': return !!battery.measurement.capacityMah && !!battery.measurement.voltageWindow
     default:           return false
   }
