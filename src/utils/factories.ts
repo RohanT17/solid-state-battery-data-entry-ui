@@ -6,21 +6,28 @@ import type {
   SeparatorData,
   AssemblyData,
   MeasurementData,
+  RateTestEntry,
 } from '@/types'
 
 export const uid = () => Math.random().toString(36).slice(2, 9)
 
+export const emptyRateTest = (): RateTestEntry => ({
+  id: uid(),
+  chargeVoltageCutoff: '',
+  dischargeVoltageCutoff: '',
+  chargingCurrentDensity: '',
+  dischargingCurrentDensity: '',
+  numCyclesAtDischargingCurrentDensity: '',
+  dischargeCapacity: '',
+  capacityRetentionPct: '',
+})
+
 export const emptyAnode = (): AnodeData => ({
-  // Active Material
   family: '',
   type: '',
   material: '',
   amCompositionPct: '',
-
-  // Coating
   coating: '',
-
-  // Electrolyte
   electrolyteFamilyInorganic: '',
   electrolyteInorganicSubcategory: '',
   electrolyteInorganicMaterial: '',
@@ -29,25 +36,15 @@ export const emptyAnode = (): AnodeData => ({
   electrolyteOrganicSubcategory: '',
   electrolyteOrganicMaterial: '',
   electrolyteOrganicWtPct: '',
-
-  // Binder
   binder: '',
   binderWtPct: '',
-
-  // Ionic Salt
   ionicSaltFamily: '',
   ionicSaltMaterial: '',
   ionicSaltWtPct: '',
-
-  // Additive
   additiveFamily: '',
   additiveMaterial: '',
   additiveWtPct: '',
-
-  // Comments
   compositionComments: '',
-
-  // Layers
   thicknessUm: '',
   loadingMgCm2: '',
   porosityPct: '',
@@ -75,13 +72,25 @@ export const emptyAssembly = (): AssemblyData => ({
 })
 
 export const emptyMeasurement = (): MeasurementData => ({
-  capacityMah: '',
-  cRateCharge: '',
-  cRateDischarge: '',
-  voltageWindow: '',
   temperatureC: '',
-  cycles80pct: '',
-  icePct: '',
+  mechanicalConditionMpa: '',
+  conditionsComments: '',
+  clcChargeVoltageCutoff: '',
+  clcDischargeVoltageCutoff: '',
+  clcChargingCurrentDensity: '',
+  clcConstantCurrentDensity: '',
+  clcArealCapacity: '',
+  clcCycleLife: '',
+  clcCycleLifeCriteria: '',
+  clcTotalDischargeArealCapacity: '',
+  clcComments: '',
+  clvChargeVoltageCutoff: '',
+  clvDischargeVoltageCutoff: '',
+  clvCycleLife: '',
+  clvCycleLifeCriteria: '',
+  clvTotalArealCapacity: '',
+  clvComments: '',
+  rateTests: [],
 })
 
 export const emptyPaper = (): Paper => ({
@@ -114,5 +123,8 @@ export const duplicateBattery = (b: Battery): Battery => ({
   cathode: { ...b.cathode },
   separator: { ...b.separator },
   assembly: { ...b.assembly },
-  measurement: { ...b.measurement },
+  measurement: {
+    ...b.measurement,
+    rateTests: b.measurement.rateTests.map((r) => ({ ...r, id: uid() })),
+  },
 })
