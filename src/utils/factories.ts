@@ -23,32 +23,52 @@ export const emptyRateTest = (): RateTestEntry => ({
 })
 
 export const emptyAnode = (): AnodeData => ({
+  // Composition — Active Material
   family: '',
   type: '',
   material: '',
   amCompositionPct: '',
+
+  // Composition — Coating
   coating: '',
-  electrolyteFamilyInorganic: '',
+
+  // Composition — Electrolyte
+  electrolyteFamily: '',
   electrolyteInorganicSubcategory: '',
   electrolyteInorganicMaterial: '',
   electrolyteInorganicWtPct: '',
-  electrolyteFamilyOrganic: '',
   electrolyteOrganicSubcategory: '',
   electrolyteOrganicMaterial: '',
   electrolyteOrganicWtPct: '',
+
+  // Composition — Binder
   binder: '',
   binderWtPct: '',
+
+  // Composition — Ionic Salt
   ionicSaltFamily: '',
   ionicSaltMaterial: '',
   ionicSaltWtPct: '',
+
+  // Composition — Additive
   additiveFamily: '',
   additiveMaterial: '',
   additiveWtPct: '',
+
+  // Composition — Comments
   compositionComments: '',
-  thicknessUm: '',
-  loadingMgCm2: '',
-  porosityPct: '',
-  binderComposition: '',
+
+  // Layer Properties
+  activeMaterialPreparation: '',
+  heatTreatmentTempC: '',
+  anodeThicknessUm: '',
+  interlayerType: '',
+  coatingPreparationMethod: '',
+  interlayerThicknessUm: '',
+  arealLoadingMgCm2: '',
+  layerAreaCm2: '',
+  initialTheoreticalArealCapacity: '',
+  layerComments: '',
 })
 
 export const emptyCathode = (): CathodeData => ({
@@ -59,7 +79,6 @@ export const emptyCathode = (): CathodeData => ({
 })
 
 export const emptySeparator = (): SeparatorData => ({
-  // Layer Properties
   preparationMethod: '',
   heatTreatmentTempC: '',
   pressPressureMpa: '',
@@ -73,8 +92,6 @@ export const emptySeparator = (): SeparatorData => ({
   surfaceRoughness: '',
   densityGCm3: '',
   layerComments: '',
-
-  // Electrolyte
   electrolyteFamily: '',
   electrolyteInorganicSubcategory: '',
   electrolyteInorganicMaterial: '',
@@ -82,17 +99,11 @@ export const emptySeparator = (): SeparatorData => ({
   electrolyteOrganicSubcategory: '',
   electrolyteOrganicMaterial: '',
   electrolyteOrganicCompositionPct: '',
-
-  // Binder
   binder: '',
   binderCompositionPct: '',
-
-  // Ionic Salt
   ionicSaltFamily: '',
   ionicSaltMaterial: '',
   ionicSaltCompositionPct: '',
-
-  // Comments
   compositionComments: '',
 })
 

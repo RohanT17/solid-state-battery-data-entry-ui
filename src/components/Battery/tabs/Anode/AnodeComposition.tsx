@@ -20,24 +20,25 @@ const AM_MATERIALS_BY_TYPE: Record<string, string[]> = {
 
 const COATINGS = ['Coating 1', 'Coating 2', 'Coating 3']
 
-const ELECTROLYTE_FAMILIES_INORGANIC = ['Inorganic Family 1', 'Inorganic Family 2']
-const ELECTROLYTE_SUBCATEGORIES_INORGANIC: Record<string, string[]> = {
-  'Inorganic Family 1': ['Inorganic Sub 1A', 'Inorganic Sub 1B'],
-  'Inorganic Family 2': ['Inorganic Sub 2A', 'Inorganic Sub 2B'],
+// Single family list drives both subcategory chains
+const ELECTROLYTE_FAMILIES = ['Electrolyte Family 1', 'Electrolyte Family 2']
+
+const ELECTROLYTE_INORGANIC_SUBCATEGORIES: Record<string, string[]> = {
+  'Electrolyte Family 1': ['Inorganic Sub 1A', 'Inorganic Sub 1B'],
+  'Electrolyte Family 2': ['Inorganic Sub 2A', 'Inorganic Sub 2B'],
 }
-const ELECTROLYTE_MATERIALS_INORGANIC: Record<string, string[]> = {
+const ELECTROLYTE_INORGANIC_MATERIALS: Record<string, string[]> = {
   'Inorganic Sub 1A': ['Inorganic Mat 1A-i', 'Inorganic Mat 1A-ii'],
   'Inorganic Sub 1B': ['Inorganic Mat 1B-i', 'Inorganic Mat 1B-ii'],
   'Inorganic Sub 2A': ['Inorganic Mat 2A-i', 'Inorganic Mat 2A-ii'],
   'Inorganic Sub 2B': ['Inorganic Mat 2B-i', 'Inorganic Mat 2B-ii'],
 }
 
-const ELECTROLYTE_FAMILIES_ORGANIC = ['Organic Family 1', 'Organic Family 2']
-const ELECTROLYTE_SUBCATEGORIES_ORGANIC: Record<string, string[]> = {
-  'Organic Family 1': ['Organic Sub 1A', 'Organic Sub 1B'],
-  'Organic Family 2': ['Organic Sub 2A', 'Organic Sub 2B'],
+const ELECTROLYTE_ORGANIC_SUBCATEGORIES: Record<string, string[]> = {
+  'Electrolyte Family 1': ['Organic Sub 1A', 'Organic Sub 1B'],
+  'Electrolyte Family 2': ['Organic Sub 2A', 'Organic Sub 2B'],
 }
-const ELECTROLYTE_MATERIALS_ORGANIC: Record<string, string[]> = {
+const ELECTROLYTE_ORGANIC_MATERIALS: Record<string, string[]> = {
   'Organic Sub 1A': ['Organic Mat 1A-i', 'Organic Mat 1A-ii'],
   'Organic Sub 1B': ['Organic Mat 1B-i', 'Organic Mat 1B-ii'],
   'Organic Sub 2A': ['Organic Mat 2A-i', 'Organic Mat 2A-ii'],
@@ -181,7 +182,7 @@ export function AnodeComposition({ data, onChange }: Props) {
         </Field>
       </div>
 
-      {/* ── Anode Active Material Coating ── */}
+      {/* ── Coating ── */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {sectionHeader('Anode Active Material Coating')}
 
@@ -200,34 +201,37 @@ export function AnodeComposition({ data, onChange }: Props) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {sectionHeader('Electrolyte')}
 
-        {/* Inorganic chain */}
-        <Field label="Inorganic family">
+        {/* Single family drives both chains */}
+        <Field label="Family">
           <select
-            value={data.electrolyteFamilyInorganic}
+            value={data.electrolyteFamily}
             onChange={(e) => onChange({
-              electrolyteFamilyInorganic: e.target.value,
+              electrolyteFamily: e.target.value,
               electrolyteInorganicSubcategory: '',
               electrolyteInorganicMaterial: '',
+              electrolyteOrganicSubcategory: '',
+              electrolyteOrganicMaterial: '',
             })}
           >
             <option value="">Select a family</option>
-            {ELECTROLYTE_FAMILIES_INORGANIC.map((f) => <option key={f}>{f}</option>)}
+            {ELECTROLYTE_FAMILIES.map((f) => <option key={f}>{f}</option>)}
           </select>
         </Field>
 
+        {/* Inorganic chain */}
         <DependentSelect
           label="Inorganic subcategory"
           value={data.electrolyteInorganicSubcategory}
-          options={ELECTROLYTE_SUBCATEGORIES_INORGANIC[data.electrolyteFamilyInorganic] ?? []}
-          disabled={!data.electrolyteFamilyInorganic}
-          disabledHint="Select an inorganic family first"
+          options={ELECTROLYTE_INORGANIC_SUBCATEGORIES[data.electrolyteFamily] ?? []}
+          disabled={!data.electrolyteFamily}
+          disabledHint="Select a family first"
           onChange={(v) => onChange({ electrolyteInorganicSubcategory: v, electrolyteInorganicMaterial: '' })}
         />
 
         <DependentSelect
           label="Inorganic material"
           value={data.electrolyteInorganicMaterial}
-          options={ELECTROLYTE_MATERIALS_INORGANIC[data.electrolyteInorganicSubcategory] ?? []}
+          options={ELECTROLYTE_INORGANIC_MATERIALS[data.electrolyteInorganicSubcategory] ?? []}
           disabled={!data.electrolyteInorganicSubcategory}
           disabledHint="Select an inorganic subcategory first"
           onChange={(v) => onChange({ electrolyteInorganicMaterial: v })}
@@ -236,33 +240,19 @@ export function AnodeComposition({ data, onChange }: Props) {
         {wtPctInput(data.electrolyteInorganicWtPct, (v) => onChange({ electrolyteInorganicWtPct: v }))}
 
         {/* Organic chain */}
-        <Field label="Organic family" style={{ marginTop: '6px' }}>
-          <select
-            value={data.electrolyteFamilyOrganic}
-            onChange={(e) => onChange({
-              electrolyteFamilyOrganic: e.target.value,
-              electrolyteOrganicSubcategory: '',
-              electrolyteOrganicMaterial: '',
-            })}
-          >
-            <option value="">Select a family</option>
-            {ELECTROLYTE_FAMILIES_ORGANIC.map((f) => <option key={f}>{f}</option>)}
-          </select>
-        </Field>
-
         <DependentSelect
           label="Organic subcategory"
           value={data.electrolyteOrganicSubcategory}
-          options={ELECTROLYTE_SUBCATEGORIES_ORGANIC[data.electrolyteFamilyOrganic] ?? []}
-          disabled={!data.electrolyteFamilyOrganic}
-          disabledHint="Select an organic family first"
+          options={ELECTROLYTE_ORGANIC_SUBCATEGORIES[data.electrolyteFamily] ?? []}
+          disabled={!data.electrolyteFamily}
+          disabledHint="Select a family first"
           onChange={(v) => onChange({ electrolyteOrganicSubcategory: v, electrolyteOrganicMaterial: '' })}
         />
 
         <DependentSelect
           label="Organic material"
           value={data.electrolyteOrganicMaterial}
-          options={ELECTROLYTE_MATERIALS_ORGANIC[data.electrolyteOrganicSubcategory] ?? []}
+          options={ELECTROLYTE_ORGANIC_MATERIALS[data.electrolyteOrganicSubcategory] ?? []}
           disabled={!data.electrolyteOrganicSubcategory}
           disabledHint="Select an organic subcategory first"
           onChange={(v) => onChange({ electrolyteOrganicMaterial: v })}

@@ -164,6 +164,19 @@ export default function App() {
                     ))}
                   </select>
                 )}
+                {(papers.length > 0 || batteries.length > 0) && (
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => {
+                      if (window.confirm('Clear all saved papers and batteries? This cannot be undone.')) {
+                        resetAll()
+                      }
+                    }}
+                  >
+                    Clear saved data
+                  </Button>
+                )}
                 <Button
                   variant="primary"
                   onClick={() => {

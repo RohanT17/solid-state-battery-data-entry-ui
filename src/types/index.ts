@@ -24,32 +24,52 @@ export type CellCasingType = '' | 'Coin' | 'Pouch' | 'Split Cell' | 'Other'
 export type CycleLifeCriteria = 'Failure' | '80% capacity retention' | 'End of graph' | ''
 
 export interface AnodeData {
+  // Composition — Active Material
   family: string
   type: string
   material: AnodeMaterial
   amCompositionPct: string
+
+  // Composition — Coating
   coating: string
-  electrolyteFamilyInorganic: string
+
+  // Composition — Electrolyte (single family drives both subcategory chains)
+  electrolyteFamily: string
   electrolyteInorganicSubcategory: string
   electrolyteInorganicMaterial: string
   electrolyteInorganicWtPct: string
-  electrolyteFamilyOrganic: string
   electrolyteOrganicSubcategory: string
   electrolyteOrganicMaterial: string
   electrolyteOrganicWtPct: string
+
+  // Composition — Binder
   binder: string
   binderWtPct: string
+
+  // Composition — Ionic Salt
   ionicSaltFamily: string
   ionicSaltMaterial: string
   ionicSaltWtPct: string
+
+  // Composition — Additive
   additiveFamily: string
   additiveMaterial: string
   additiveWtPct: string
+
+  // Composition — Comments
   compositionComments: string
-  thicknessUm: string
-  loadingMgCm2: string
-  porosityPct: string
-  binderComposition: string
+
+  // Layer Properties
+  activeMaterialPreparation: string
+  heatTreatmentTempC: string
+  anodeThicknessUm: string
+  interlayerType: string
+  coatingPreparationMethod: string
+  interlayerThicknessUm: string
+  arealLoadingMgCm2: string
+  layerAreaCm2: string
+  initialTheoreticalArealCapacity: string
+  layerComments: string
 }
 
 export interface CathodeData {
@@ -60,7 +80,6 @@ export interface CathodeData {
 }
 
 export interface SeparatorData {
-  // Layer Properties
   preparationMethod: string
   heatTreatmentTempC: string
   pressPressureMpa: string
@@ -74,8 +93,6 @@ export interface SeparatorData {
   surfaceRoughness: string
   densityGCm3: string
   layerComments: string
-
-  // Composition — Electrolyte
   electrolyteFamily: string
   electrolyteInorganicSubcategory: string
   electrolyteInorganicMaterial: string
@@ -83,17 +100,11 @@ export interface SeparatorData {
   electrolyteOrganicSubcategory: string
   electrolyteOrganicMaterial: string
   electrolyteOrganicCompositionPct: string
-
-  // Composition — Binder
   binder: string
   binderCompositionPct: string
-
-  // Composition — Ionic Salt
   ionicSaltFamily: string
   ionicSaltMaterial: string
   ionicSaltCompositionPct: string
-
-  // Composition — Comments
   compositionComments: string
 }
 
@@ -118,12 +129,9 @@ export interface RateTestEntry {
 }
 
 export interface MeasurementData {
-  // Conditions
   temperatureC: string
   mechanicalConditionMpa: string
   conditionsComments: string
-
-  // Cycle Life — Constant Discharge Current Density
   clcChargeVoltageCutoff: string
   clcDischargeVoltageCutoff: string
   clcChargingCurrentDensity: string
@@ -133,16 +141,12 @@ export interface MeasurementData {
   clcCycleLifeCriteria: CycleLifeCriteria
   clcTotalDischargeArealCapacity: string
   clcComments: string
-
-  // Cycle Life — Variable Current Density
   clvChargeVoltageCutoff: string
   clvDischargeVoltageCutoff: string
   clvCycleLife: string
   clvCycleLifeCriteria: CycleLifeCriteria
   clvTotalArealCapacity: string
   clvComments: string
-
-  // Rate Tests (up to 8)
   rateTests: RateTestEntry[]
 }
 
