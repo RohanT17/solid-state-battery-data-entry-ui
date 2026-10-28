@@ -1,23 +1,11 @@
 import type { AnodeData } from '@/types'
 import { Field, FormGrid } from '@/components/UI'
 
-const ACTIVE_MATERIAL_PREPARATIONS = [
-  'Preparation Method 1',
-  'Preparation Method 2',
-  'Preparation Method 3',
-]
+const ACTIVE_MATERIAL_PREPARATIONS = ['Sol-Gel', 'CVD', 'ALD', 'Plating', 'Sputtering', 'Spray Pyrolysis', 'Evaporation', 'Press', 'Sol gel', 'Doctor Blade', 'Other', 'None']
 
-const INTERLAYER_TYPES = [
-  'Interlayer Type 1',
-  'Interlayer Type 2',
-  'Interlayer Type 3',
-]
+const INTERLAYER_TYPES = ['Polymer', 'Metal', 'Metal Oxide', 'Carbon', 'Phosphorous Nitrides', 'Sulfide Based', 'Other-interlayer', 'None']
 
-const COATING_PREPARATION_METHODS = [
-  'Coating Method 1',
-  'Coating Method 2',
-  'Coating Method 3',
-]
+const COATING_PREPARATION_METHODS = ['Wet Chemical', 'Spray Coating', 'PLD', 'CVD', 'ALD', 'Spark Plasma Sintered', 'No Active Material Coating']
 
 interface Props {
   data: AnodeData
