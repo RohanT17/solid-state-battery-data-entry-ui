@@ -1,21 +1,29 @@
 import type { AnodeData } from '@/types'
 import { Field } from '@/components/UI'
 
-// ── Placeholder option maps ───────────────────────────────────────────────────
+// ── Option maps ───────────────────────────────────────────────────────────────
 
-const AM_FAMILIES = ['Family A', 'Family B']
+const AM_FAMILIES = ['Li', 'Na']
 
 const AM_TYPES_BY_FAMILY: Record<string, string[]> = {
-  'Family A': ['Type A1', 'Type A2', 'Type A3'],
-  'Family B': ['Type B1', 'Type B2'],
+  'Li': ['Carbon', 'Silicon', 'Metal Oxide', 'Metal and Metal Alloy', 'Li Free'],
+  'Na': ['Carbon', 'Metal Oxide', 'Metal and Metal Alloy', 'Na Free'],
 }
 
-const AM_MATERIALS_BY_TYPE: Record<string, string[]> = {
-  'Type A1': ['Material A1a', 'Material A1b'],
-  'Type A2': ['Material A2a', 'Material A2b'],
-  'Type A3': ['Material A3a', 'Material A3b'],
-  'Type B1': ['Material B1a', 'Material B1b'],
-  'Type B2': ['Material B2a', 'Material B2b'],
+const AM_MATERIALS_BY_FAMILY_AND_TYPE: Record<string, Record<string, string[]>> = {
+  'Li': {
+    'Carbon':            ['Graphite', 'Graphene Oxide', 'Non-graphitic carbon', 'Hard Carbon', 'Carbon-Silicon', 'Other'],
+    'Silicon':           ['Amorphous Silicon', 'Crystalline Silicon', 'SiOx', 'SiNx', 'Other'],
+    'Metal Oxide':       ['LTO', 'Other'],
+    'Metal and Metal Alloy': ['Li Metal', 'Li-In Alloy', 'Li-Sb Alloy', 'Li-Al Alloy', 'Li-Mg Alloy', 'Li-Zn Alloy', 'Other'],
+    'Li Free':              ['None'],
+  },
+  'Na': {
+    'Carbon':            ['Hard Carbon', 'Other'],
+    'Metal Oxide':       ['Other'],
+    'Metal and Metal Alloy': ['Na Metal', 'Na9Sn4', 'Na15Sn4', 'Na2Sn', 'Other Na-Sn', 'Other'],
+    'Na Free':              ['None'],
+  },
 }
 
 const COATINGS = ['Coating 1', 'Coating 2', 'Coating 3']
@@ -140,8 +148,8 @@ export function AnodeComposition({ data, onChange }: Props) {
 
         <Field label="Family">
           <select
-            value={data.family}
-            onChange={(e) => onChange({ family: e.target.value, type: '', material: '' })}
+            value={data.amFamily}
+            onChange={(e) => onChange({ amFamily: e.target.value, amType: '', amMaterial: '' })}
           >
             <option value="">Select a family</option>
             {AM_FAMILIES.map((f) => <option key={f}>{f}</option>)}
@@ -150,20 +158,20 @@ export function AnodeComposition({ data, onChange }: Props) {
 
         <DependentSelect
           label="Type"
-          value={data.type}
-          options={AM_TYPES_BY_FAMILY[data.family] ?? []}
-          disabled={!data.family}
+          value={data.amType}
+          options={AM_TYPES_BY_FAMILY[data.amFamily] ?? []}
+          disabled={!data.amFamily}
           disabledHint="Select a family first"
-          onChange={(v) => onChange({ type: v, material: '' })}
+          onChange={(v) => onChange({ amType: v, amMaterial: '' })}
         />
 
         <DependentSelect
           label="Material"
-          value={data.material}
-          options={AM_MATERIALS_BY_TYPE[data.type] ?? []}
-          disabled={!data.type}
+          value={data.amMaterial}
+          options={AM_MATERIALS_BY_FAMILY_AND_TYPE[data.amFamily]?.[data.amType] ?? []}
+          disabled={!data.amType}
           disabledHint="Select a type first"
-          onChange={(v) => onChange({ material: v as AnodeData['material'] })}
+          onChange={(v) => onChange({ amMaterial: v })}
         />
 
         <Field label="AM composition" unit="%">

@@ -16,18 +16,11 @@ export interface Paper {
 export type PaperDraft = Omit<Paper, 'id'>
 
 // ── Battery sub-sections ──────────────────────────────────────────────────────
-
-export type AnodeMaterial = '' | 'material 1' | 'material 2' | 'material 3' | 'material 4' | 'material 5'
-export type CathodeMaterial = 'LFP' | 'NMC' | 'NCA' | 'LCO' | 'Other'
-export type SeparatorPolishTreatment = '' | 'Wet' | 'Dry' | 'Mixed (Wet + Dry)' | 'None'
-export type CellCasingType = '' | 'Coin' | 'Pouch' | 'Split Cell' | 'Other'
-export type CycleLifeCriteria = 'Failure' | '80% capacity retention' | 'End of graph' | ''
-
 export interface AnodeData {
   // Composition — Active Material
-  family: string
-  type: string
-  material: AnodeMaterial
+  amFamily: string
+  amType: string
+  amMaterial: string
   amCompositionPct: string
 
   // Composition — Coating
@@ -126,7 +119,7 @@ export interface SeparatorData {
   heatTreatmentTempC: string
   pressPressureMpa: string
   thicknessUm: string
-  polishTreatment: SeparatorPolishTreatment
+  polishTreatment: string
   finestPolishGritUm: string
   sinteringTempC: string
   sinteringTimeHrs: string
@@ -151,7 +144,7 @@ export interface SeparatorData {
 }
 
 export interface AssemblyData {
-  cellCasingType: CellCasingType
+  cellCasingType: string
   heatTreatmentTempC: string
   appliedPressureMpa: string
   comments: string
@@ -181,13 +174,13 @@ export interface MeasurementData {
   clcConstantCurrentDensity: string
   clcArealCapacity: string
   clcCycleLife: string
-  clcCycleLifeCriteria: CycleLifeCriteria
+  clcCycleLifeCriteria: string
   clcTotalDischargeArealCapacity: string
   clcComments: string
   clvChargeVoltageCutoff: string
   clvDischargeVoltageCutoff: string
   clvCycleLife: string
-  clvCycleLifeCriteria: CycleLifeCriteria
+  clvCycleLifeCriteria: string
   clvTotalArealCapacity: string
   clvComments: string
   rateTests: RateTestEntry[]
