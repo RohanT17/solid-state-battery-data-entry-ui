@@ -20,6 +20,7 @@ export const emptyRateTest = (): RateTestEntry => ({
   numCyclesAtDischargingCurrentDensity: '',
   dischargeCapacity: '',
   capacityRetentionPct: '',
+  comments: '',  
 })
 
 export const emptyAnode = (): AnodeData => ({
@@ -72,10 +73,52 @@ export const emptyAnode = (): AnodeData => ({
 })
 
 export const emptyCathode = (): CathodeData => ({
-  material: 'LFP',
+  // Composition — Active Material
+  amFamily: '',
+  amType: '',
+  amMaterial: '',
+  amCompositionPct: '',
+
+  // Composition — Coating
+  coating: '',
+
+  // Composition — Electrolyte
+  electrolyteFamily: '',
+  electrolyteInorganicSubcategory: '',
+  electrolyteInorganicMaterial: '',
+  electrolyteInorganicWtPct: '',
+  electrolyteOrganicSubcategory: '',
+  electrolyteOrganicMaterial: '',
+  electrolyteOrganicWtPct: '',
+
+  // Composition — Binder
+  binder: '',
+  binderWtPct: '',
+
+  // Composition — Ionic Salt
+  ionicSaltFamily: '',
+  ionicSaltMaterial: '',
+  ionicSaltWtPct: '',
+
+  // Composition — Additive
+  additiveFamily: '',
+  additiveMaterial: '',
+  additiveWtPct: '',
+
+  // Composition — Comments
+  compositionComments: '',
+
+  // Layer Properties
+  activeMaterialPreparation: '',
+  heatTreatmentTempC: '',
   thicknessUm: '',
-  nmcRatio: '',
-  loadingMgCm2: '',
+  interlayerType: '',
+  coatingPreparationMethod: '',
+  interlayerThicknessUm: '',
+  arealLoadingMgCm2: '',
+  layerAreaCm2: '',
+  initialTheoreticalArealCapacity: '',
+  layerComments: '',
 })
 
 export const emptySeparator = (): SeparatorData => ({

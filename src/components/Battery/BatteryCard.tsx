@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { Battery, BatterySection } from '@/types'
 import { Collapsible, Badge, Button, StatusDot, Divider } from '@/components/UI'
 import { AnodeTab }       from './tabs/Anode/AnodeTab'
-import { CathodeTab }     from './tabs/CathodeTab'
+import { CathodeTab }     from './tabs/Cathode/CathodeTab'
 import { SeparatorTab }   from './tabs/Separator/SeparatorTab'
 import { AssemblyTab }    from './tabs/AssemblyTab'
 import { MeasurementTab } from './tabs/Measurement/MeasurementTab'
@@ -128,6 +128,7 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, o
             <CathodeTab
               data={battery.cathode}
               onChange={(p) => onChange('cathode', p as Record<string, string>)}
+              onNextMainTab={advanceMainTab}
             />
           )}
           {activeTab === 'separator' && (

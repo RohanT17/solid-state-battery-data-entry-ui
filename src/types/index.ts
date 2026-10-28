@@ -73,10 +73,52 @@ export interface AnodeData {
 }
 
 export interface CathodeData {
-  material: CathodeMaterial
+  // Composition — Active Material
+  amFamily: string
+  amType: string
+  amMaterial: string
+  amCompositionPct: string
+
+  // Composition — Coating
+  coating: string
+
+  // Composition — Electrolyte
+  electrolyteFamily: string
+  electrolyteInorganicSubcategory: string
+  electrolyteInorganicMaterial: string
+  electrolyteInorganicWtPct: string
+  electrolyteOrganicSubcategory: string
+  electrolyteOrganicMaterial: string
+  electrolyteOrganicWtPct: string
+
+  // Composition — Binder
+  binder: string
+  binderWtPct: string
+
+  // Composition — Ionic Salt
+  ionicSaltFamily: string
+  ionicSaltMaterial: string
+  ionicSaltWtPct: string
+
+  // Composition — Additive
+  additiveFamily: string
+  additiveMaterial: string
+  additiveWtPct: string
+
+  // Composition — Comments
+  compositionComments: string
+
+  // Layer Properties
+  activeMaterialPreparation: string
+  heatTreatmentTempC: string
   thicknessUm: string
-  nmcRatio: string
-  loadingMgCm2: string
+  interlayerType: string
+  coatingPreparationMethod: string
+  interlayerThicknessUm: string
+  arealLoadingMgCm2: string
+  layerAreaCm2: string
+  initialTheoreticalArealCapacity: string
+  layerComments: string
 }
 
 export interface SeparatorData {
@@ -126,6 +168,7 @@ export interface RateTestEntry {
   numCyclesAtDischargingCurrentDensity: string
   dischargeCapacity: string
   capacityRetentionPct: string
+  comments: string
 }
 
 export interface MeasurementData {

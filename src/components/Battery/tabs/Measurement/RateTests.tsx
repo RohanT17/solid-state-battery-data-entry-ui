@@ -82,6 +82,15 @@ function RateTestRow({
         <Field label="Capacity Retention" unit="%" style={{ gridColumn: 'span 2' }}>
           <input type="number" min={0} max={100} step="any" value={entry.capacityRetentionPct} onChange={set('capacityRetentionPct')} placeholder="e.g. 95" />
         </Field>
+
+        <Field label="Comments" optional style={{ gridColumn: 'span 2' }}>
+          <textarea
+            value={entry.comments}
+            onChange={(e) => onUpdate({ comments: e.target.value })}
+            placeholder="Any notes about this rate test…"
+            style={{ minHeight: '60px' }}
+          />
+        </Field>
       </FormGrid>
     </div>
   )
@@ -92,7 +101,10 @@ export function RateTests({ data, onChange }: Props) {
 
   const addTest = () => {
     if (tests.length >= MAX_RATE_TESTS) return
-    onChange({ rateTests: [...tests, { id: uid(), chargeVoltageCutoff: '', dischargeVoltageCutoff: '', chargingCurrentDensity: '', dischargingCurrentDensity: '', numCyclesAtDischargingCurrentDensity: '', dischargeCapacity: '', capacityRetentionPct: '' }] })
+    onChange({ rateTests: [...tests, {
+        id: uid(), chargeVoltageCutoff: '', dischargeVoltageCutoff: '', chargingCurrentDensity: '', dischargingCurrentDensity: '', numCyclesAtDischargingCurrentDensity: '', dischargeCapacity: '', capacityRetentionPct: '',
+        comments: ''
+    }] })
   }
 
   const updateTest = (id: string, patch: Partial<RateTestEntry>) => {
