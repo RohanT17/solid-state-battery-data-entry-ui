@@ -38,6 +38,7 @@ function isFilled(battery: Battery, section: BatterySection): boolean {
 
 const TABS: { key: BatterySection; label: string }[] = [
   { key: 'anode',       label: 'Anode' },
+  { key: 'separator',   label: 'Separator' },
   { key: 'cathode',     label: 'Cathode' },
   { key: 'separator',   label: 'Separator' },
   { key: 'assembly',    label: 'Assembly' },
