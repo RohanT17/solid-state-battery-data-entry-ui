@@ -1,58 +1,93 @@
 import type { CathodeData } from '@/types'
 import { Field } from '@/components/UI'
 
-// ── Placeholder option maps ───────────────────────────────────────────────────
-
-const AM_FAMILIES = ['Family A', 'Family B']
+const AM_FAMILIES = ['Li', 'Na']
 
 const AM_TYPES_BY_FAMILY: Record<string, string[]> = {
-  'Family A': ['Type A1', 'Type A2', 'Type A3'],
-  'Family B': ['Type B1', 'Type B2'],
+  'Li': ['Sulfur', 'Transition Metal Oxide', 'Phosphate', 'Silicates', 'Borates', 'Fluorophosphates', 'Fluorosulphates'],
+  'Na': ['Sulfur', 'Transition Metal Oxide', 'Phosphate Fluoro', 'Organic Metallic'],
 }
 
-const AM_MATERIALS_BY_TYPE: Record<string, string[]> = {
-  'Type A1': ['Material A1a', 'Material A1b'],
-  'Type A2': ['Material A2a', 'Material A2b'],
-  'Type A3': ['Material A3a', 'Material A3b'],
-  'Type B1': ['Material B1a', 'Material B1b'],
-  'Type B2': ['Material B2a', 'Material B2b'],
+const AM_MATERIALS_BY_FAMILY_AND_TYPE: Record<string, Record<string, string[]>> = {
+  'Li': {
+    'Sulfur':                ['Li2S', 'Sulfur (Elemental)', 'SPAN', 'Other'],
+    'Transition Metal Oxide':['LMnO', 'NMC111', 'NMC811', 'NMC622', 'NMC523', 'LCO', 'NCA', 'LMnNiO', 'LNO', 'LVO', 'NMC Other', 'Other'],
+    'Phosphate':             ['LiFePO4', 'LiMnPO4', 'LiCoPO4', 'LiNiPO4', 'LiVPO4', 'Other'],
+    'Silicates':             ['Li2FeSiO4', 'Li2MnSiO4', 'Li2CoSiO4', 'Other'],
+    'Borates':               ['LiFeBO3', 'LiCoBO3', 'LiMnBO3', 'Other'],
+    'Fluorophosphates':      ['Li(Na)VPO4F', 'Na3V2(PO4)2F3', 'Li5V(PO4)2F2', 'Li(Na)2FePO4F', 'Li(Na)2MnPO4F', 'Li(Na)2CoPO4F', 'Li(Na)2NiPO4F', 'Other'],
+    'Fluorosulphates':       ['LiFeSO4F', 'LiMSO4F (M = Co, Ni)', 'LiMnSO4F', 'Other'],
+  },
+  'Na': {
+    'Sulfur':                ['Na2S', 'S', 'SPAN', 'FeS2', 'Other'],
+    'Transition Metal Oxide':['NaCrO2', 'NaCoO2', 'NaTiO2', 'NaV2O5', 'NaVO2', 'NaMnO2', 'NaMnNiO', 'Other'],
+    'Phosphate Fluoro':      ['NaFePO4', 'NaMnPO4', 'NaTi2(PO4)3', 'Na3V2O2(PO4)2F', 'Na2V3(PO4)3', 'Other'],
+    'Organic Metallic':      ['Na2Fe(CN)6 (Including Doped)', 'Pyrene Tetraone', 'Other'],
+  },
 }
 
-const COATINGS = ['Coating 1', 'Coating 2', 'Coating 3']
+const COATINGS = ['Polymer', 'Metal', 'Metal Oxide', 'Carbon', 'Phosphorous Nitrides', 'Sulfide Based', 'Other-interlayer', 'None']
 
-const ELECTROLYTE_FAMILIES = ['Electrolyte Family 1', 'Electrolyte Family 2']
+const ELECTROLYTE_FAMILIES = ['Li', 'Na']
 
 const ELECTROLYTE_INORGANIC_SUBCATEGORIES: Record<string, string[]> = {
-  'Electrolyte Family 1': ['Inorganic Sub 1A', 'Inorganic Sub 1B'],
-  'Electrolyte Family 2': ['Inorganic Sub 2A', 'Inorganic Sub 2B'],
+  'Li': ['LISICON Type', 'Argyrodite', 'NASICON Type', 'Nitride', 'Hydride', 'Perovskite', 'Garnet', 'Sulfide', 'Anti-Perovskite', 'Halide', 'LiPON', 'None'],
+  'Na': ['Inorganic Crystalline', 'Sulfide', 'None'],
 }
-const ELECTROLYTE_INORGANIC_MATERIALS: Record<string, string[]> = {
-  'Inorganic Sub 1A': ['Inorganic Mat 1A-i', 'Inorganic Mat 1A-ii'],
-  'Inorganic Sub 1B': ['Inorganic Mat 1B-i', 'Inorganic Mat 1B-ii'],
-  'Inorganic Sub 2A': ['Inorganic Mat 2A-i', 'Inorganic Mat 2A-ii'],
-  'Inorganic Sub 2B': ['Inorganic Mat 2B-i', 'Inorganic Mat 2B-ii'],
+
+const ELECTROLYTE_INORGANIC_MATERIALS: Record<string, Record<string, string[]>> = {
+  'Li': {
+    'LISICON Type':   ['LiSiPO', 'Li3PS4', 'LiSiPS', 'LiGePS', 'Li14Zn(GeO4)4', 'Other'],
+    'Argyrodite':     ['Li6PS5Br', 'Li6PS5Cl', 'Li2PS6', 'Li6PS5I', 'Li6PO5Cl', 'Other'],
+    'NASICON Type':   ['LATP (Including Doped)', 'LTP (Including Doped)', 'LiGeP (Including Doped)', 'LHFP (Including Doped)', 'LZP (Including Doped)', 'LAGP', 'Other'],
+    'Nitride':        ['Li3N', 'Li2PN4', 'LiSi2N3', 'LiPN2', 'Other'],
+    'Hydride':        ['Li2NH', 'Li3(NH2)2I', 'LiBH4', 'LiAlH4', 'Other'],
+    'Perovskite':     ['LiLaTiO2', 'LiSr2Ti2NbO9', 'LLTAO', 'LiNdTiO', 'Li3xLa2/3-xTiO3', 'Other'],
+    'Garnet':         ['LLZO (Including Doped) - Tetragonal', 'LLZO (Including Doped) - Cubic', 'Li5La3Ta2O12', 'Li5La3Nb2O12', 'Li6BaLa2Ta2O12', 'Other'],
+    'Sulfide':        ['X:Li2S-Y:PS5', 'LGPS', 'Li4GeS4', 'Other'],
+    'Anti-Perovskite':['Li3OCl', 'Li3O(ClBr)', 'Li3OBr', 'LiBaClO', 'LiMgClO', 'LiCaClO', 'Other'],
+    'Halide':         ['LiF–YF3', 'LiF–ScF3', 'Li3YCl6', 'Li2.5Y0.5Zr0.5Cl6', 'Li3ErCl6', 'Li3YbCl6', 'Li3YBr6', 'Li3ScCl6', 'Li3ScBr6', 'Li3ErI6', 'Li3ScI6', 'Li3YI6', 'Li3LaI6', 'LiYCl3', 'LiICl3', 'Li3InCl6', 'Other'],
+    'LiPON':          ['Li3PO4 (Including Doped)', 'Li3PO4-2Li2O', 'Other'],
+    'None':           ['None'],
+  },
+  'Na': {
+    'Inorganic Crystalline': ['Na-β″-Al2O3 (Including Additives)', 'Na-β\'-Al2O3 (Including Additives)', 'NBA - Other', 'NZSP (NASICON - Including Doped)', 'NYZC', 'NBH', 'Other'],
+    'Sulfide':               ['Na3PS4 - cubic', 'Na3SbS4', 'Na3PS4', 'Na11Sn2PS12', 'NPSO', 'Other'],
+    'None':                  ['None'],
+  },
 }
 
 const ELECTROLYTE_ORGANIC_SUBCATEGORIES: Record<string, string[]> = {
-  'Electrolyte Family 1': ['Organic Sub 1A', 'Organic Sub 1B'],
-  'Electrolyte Family 2': ['Organic Sub 2A', 'Organic Sub 2B'],
-}
-const ELECTROLYTE_ORGANIC_MATERIALS: Record<string, string[]> = {
-  'Organic Sub 1A': ['Organic Mat 1A-i', 'Organic Mat 1A-ii'],
-  'Organic Sub 1B': ['Organic Mat 1B-i', 'Organic Mat 1B-ii'],
-  'Organic Sub 2A': ['Organic Mat 2A-i', 'Organic Mat 2A-ii'],
-  'Organic Sub 2B': ['Organic Mat 2B-i', 'Organic Mat 2B-ii'],
+  'Li': ['Single Polymer', 'Polymer Blend', 'Organic Electrolytes', 'None'],
+  'Na': ['Single Polymer', 'Polymer Blend', 'Organic Electrolyte', 'None'],
 }
 
-const BINDERS = ['Binder 1', 'Binder 2', 'Binder 3']
+const ELECTROLYTE_ORGANIC_MATERIALS: Record<string, Record<string, string[]>> = {
+  'Li': {
+    'Single Polymer':      ['PEO-Based', 'Mxene-Based', 'PEGDA-Based', 'PAN-Based', '1,3 Dioxolane-Based', 'PBA-Based', 'PVDF-Based', 'PEG-Based', 'PTFE-Based', 'Other'],
+    'Polymer Blend':       ['PEO-Based', 'Mxene-Based', 'PEGDA or PEGDMA - Based', 'PAN-Based', '1,3 Dioxolane-Based', 'PBA-Based', 'PVDF-Based', 'PEG-Based', 'PTFE-Based', 'Succinonitrile', 'Other'],
+    'Organic Electrolytes':['Succinonitrile', 'Other'],
+    'None':                ['None'],
+  },
+  'Na': {
+    'Single Polymer':     ['PEO-Based', 'Mxene-Based', 'PEGDA-Based', 'PAN-Based', '1,3 Dioxolane-Based', 'PBA-Based', 'PVDF-Based', 'PEG-Based', 'PTFE-Based', 'Other'],
+    'Polymer Blend':      ['PEO-Based', 'Mxene-Based', 'PEGDA-Based', 'PAN-Based', '1,3 Dioxolane-Based', 'PBA-Based', 'PVDF-Based', 'PEG-Based', 'PTFE-Based', 'Other'],
+    'Organic Electrolyte':['Succinonitrile', 'Other'],
+    'None':               ['None'],
+  },
+}
 
-const IONIC_SALT_FAMILIES = ['Salt Family 1', 'Salt Family 2']
+const BINDERS = ['PEO-Based', 'MEEP-Based', 'PO-Based', 'PSi-Based', 'PPG-Based', 'PVA-Based', 'PVDF-Based', 'PVP-Based', 'PTMC-Based', 'PAN-Based', 'Mxene-Based', 'PBA-Based', '1,3 Dioxolane-Based', 'PTFO-Based', 'SBR-Based', 'Cellulose-Based', 'PTFE-Based', 'PPC-Based', 'PVB-Based', 'PEGDA or PEGDMA-Based', 'None', 'Other']
+
+const IONIC_SALT_FAMILIES = ['Li', 'Na', 'None']
+
 const IONIC_SALT_MATERIALS: Record<string, string[]> = {
-  'Salt Family 1': ['Salt 1A', 'Salt 1B'],
-  'Salt Family 2': ['Salt 2A', 'Salt 2B'],
+  'Li':   ['LiTFSi', 'LiPF6', 'LiCl04', 'LiBF6', 'LiCF3SO3', 'LiF', 'LiFSI', 'Other'],
+  'Na':   ['NaPF6', 'NaClO4', 'NaTFSi', 'NaFSi', 'NaFNFSI', 'NaBr', 'NaPCPI', 'NaTCP', 'NaTIM', 'NaCF3SO3', 'NaCl', 'Other'],
+  'None': ['None'],
 }
 
-const ADDITIVE_FAMILIES = ['Additive Family 1', 'Additive Family 2']
+const ADDITIVE_FAMILIES = ['Carbon Nitride', 'Li3BO3', 'Sulfide', 'Carbon Black', 'Carbon (other)', 'Metal Alloy', 'Other', 'None']
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -159,7 +194,7 @@ export function CathodeComposition({ data, onChange }: Props) {
         <DependentSelect
           label="Material"
           value={data.amMaterial}
-          options={AM_MATERIALS_BY_TYPE[data.amType] ?? []}
+          options={AM_MATERIALS_BY_FAMILY_AND_TYPE[data.amFamily]?.[data.amType] ?? []}
           disabled={!data.amType}
           disabledHint="Select a type first"
           onChange={(v) => onChange({ amMaterial: v })}
@@ -228,7 +263,7 @@ export function CathodeComposition({ data, onChange }: Props) {
         <DependentSelect
           label="Inorganic material"
           value={data.electrolyteInorganicMaterial}
-          options={ELECTROLYTE_INORGANIC_MATERIALS[data.electrolyteInorganicSubcategory] ?? []}
+          options={ELECTROLYTE_INORGANIC_MATERIALS[data.electrolyteFamily]?.[data.electrolyteInorganicSubcategory] ?? []}
           disabled={!data.electrolyteInorganicSubcategory}
           disabledHint="Select an inorganic subcategory first"
           onChange={(v) => onChange({ electrolyteInorganicMaterial: v })}
@@ -248,7 +283,7 @@ export function CathodeComposition({ data, onChange }: Props) {
         <DependentSelect
           label="Organic material"
           value={data.electrolyteOrganicMaterial}
-          options={ELECTROLYTE_ORGANIC_MATERIALS[data.electrolyteOrganicSubcategory] ?? []}
+          options={ELECTROLYTE_ORGANIC_MATERIALS[data.electrolyteFamily]?.[data.electrolyteInorganicSubcategory] ?? []}
           disabled={!data.electrolyteOrganicSubcategory}
           disabledHint="Select an organic subcategory first"
           onChange={(v) => onChange({ electrolyteOrganicMaterial: v })}

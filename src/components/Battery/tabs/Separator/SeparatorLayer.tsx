@@ -1,19 +1,9 @@
-import type { SeparatorData, SeparatorPolishTreatment } from '@/types'
+import type { SeparatorData } from '@/types'
 import { Field, FormGrid } from '@/components/UI'
 
-const PREPARATION_METHODS = [
-  'Tape casting',
-  'Dry pressing',
-  'Cold isostatic pressing',
-  'Hot pressing',
-  'Sintering',
-  'Spin coating',
-  'Slurry casting',
-  'Sol-gel',
-  'Other',
-]
+const PREPARATION_METHODS = ['Doctor Blade', 'Spin Coating', 'Evaporation', 'ALD', 'Press', 'Other']
 
-const POLISH_TREATMENTS: SeparatorPolishTreatment[] = ['Wet', 'Dry', 'Mixed (Wet + Dry)', 'None']
+const POLISH_TREATMENTS = ['Wet', 'Dry', 'Mixed (Wet + Dry)', 'None']
 
 interface Props {
   data: SeparatorData
@@ -53,7 +43,7 @@ export function SeparatorLayer({ data, onChange }: Props) {
         <select
           value={data.polishTreatment}
           onChange={(e) => onChange({
-            polishTreatment: e.target.value as SeparatorPolishTreatment,
+            polishTreatment: e.target.value,
             finestPolishGritUm: '',
           })}
         >
