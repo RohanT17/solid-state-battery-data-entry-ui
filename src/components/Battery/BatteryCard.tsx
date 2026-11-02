@@ -40,7 +40,6 @@ const TABS: { key: BatterySection; label: string }[] = [
   { key: 'anode',       label: 'Anode' },
   { key: 'separator',   label: 'Separator' },
   { key: 'cathode',     label: 'Cathode' },
-  { key: 'separator',   label: 'Separator' },
   { key: 'assembly',    label: 'Assembly' },
   { key: 'measurement', label: 'Measurement' },
 ]
@@ -60,7 +59,7 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, o
   const filledCount = TABS.filter((t) => isFilled(battery, t.key)).length
   const allFilled = filledCount === TABS.length
 
-  const summary = `${battery.anode.family || '—'} / ${battery.cathode.material || '—'}`
+  const summary = `${battery.anode.amFamily || '—'} / ${battery.cathode.amMaterial || '—'}`
 
   const advanceMainTab = () => {
     const idx = TABS.findIndex((t) => t.key === activeTab)
