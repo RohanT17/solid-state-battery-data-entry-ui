@@ -18,10 +18,13 @@ interface Props {
   data: MeasurementData
   onChange: (patch: Partial<MeasurementData>) => void
   onNextMainTab: () => void  // called from Rate Tests — signals "done with battery"
+  onPrevMainTab: () => void
+  prevMainTabLabel?: string
+  startAtEnd: boolean
 }
 
-export function MeasurementTab({ data, onChange, onNextMainTab }: Props) {
-  const [activeSubTab, setActiveSubTab] = useState<MeasSubTab>('conditions')
+export function MeasurementTab({ data, onChange, onNextMainTab, onPrevMainTab, prevMainTabLabel, startAtEnd }: Props) {
+  const [activeSubTab, setActiveSubTab] = useState<MeasSubTab>(startAtEnd ? 'rate' : 'conditions')
 
   const currentIndex = SUB_TABS.findIndex((t) => t.key === activeSubTab)
   const isLast = currentIndex === SUB_TABS.length - 1
@@ -33,6 +36,13 @@ export function MeasurementTab({ data, onChange, onNextMainTab }: Props) {
       onNextMainTab()
     }
   }
+
+  const handleBack = () => {
+    if (currentIndex > 0) setActiveSubTab(SUB_TABS[currentIndex - 1].key)
+  }
+
+  const prevLabel = currentIndex > 0 ? SUB_TABS[currentIndex - 1].label : prevMainTabLabel
+  const handlePrev = currentIndex > 0 ? handleBack : onPrevMainTab
 
   const nextLabel = isLast
     ? 'Done: Add another battery or preview CSV by clicking one of the buttons below'
@@ -81,11 +91,29 @@ export function MeasurementTab({ data, onChange, onNextMainTab }: Props) {
         {activeSubTab === 'rate'       && <RateTests         data={data} onChange={onChange} />}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+        {prevLabel && (
+          <button
+            type="button"
+            onClick={handlePrev}
+            style={{
+              padding: '6px 14px',
+              borderRadius: 'var(--radius)',
+              border: '1px solid var(--border)',
+              background: 'transparent',
+              color: 'var(--text-2)',
+              fontSize: '.875rem',
+              cursor: 'pointer',
+            }}
+          >
+            ← Prev: {prevLabel}
+          </button>
+        )}
         <button
           type="button"
           onClick={handleNext}
           style={{
+            marginLeft: 'auto',
             padding: '6px 14px',
             borderRadius: 'var(--radius)',
             border: '1px solid var(--border)',

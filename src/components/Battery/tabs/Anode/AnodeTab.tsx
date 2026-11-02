@@ -7,6 +7,9 @@ interface Props {
   data: AnodeData
   onChange: (patch: Partial<AnodeData>) => void
   onNextMainTab: () => void
+  onPrevMainTab: () => void
+  prevMainTabLabel?: string
+  startAtEnd: boolean
 }
 
 type AnodeSubTab = 'composition' | 'layer'
@@ -16,8 +19,8 @@ const SUB_TABS: { key: AnodeSubTab; label: string }[] = [
   { key: 'layer',      label: 'Layer Properties' },
 ]
 
-export function AnodeTab({ data, onChange, onNextMainTab }: Props) {
-  const [activeSubTab, setActiveSubTab] = useState<AnodeSubTab>('composition')
+export function AnodeTab({ data, onChange, onNextMainTab, onPrevMainTab, prevMainTabLabel, startAtEnd }: Props) {
+  const [activeSubTab, setActiveSubTab] = useState<AnodeSubTab>(startAtEnd ? 'layer' : 'composition')
 
   const handleNext = () => {
     if (activeSubTab === 'composition') {
@@ -27,7 +30,14 @@ export function AnodeTab({ data, onChange, onNextMainTab }: Props) {
     }
   }
 
-  const nextLabel = activeSubTab === 'composition' ? 'Next: Layer Properties →' : 'Next: Cathode →'
+  const handleBack = () => {
+    setActiveSubTab('composition')
+  }
+
+  const prevLabel = activeSubTab === 'composition' ? prevMainTabLabel : 'Composition'
+  const handlePrev = activeSubTab === 'composition' ? onPrevMainTab : handleBack
+
+  const nextLabel = activeSubTab === 'composition' ? 'Next: Layer Properties →' : 'Next: Separator →'
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -66,11 +76,29 @@ export function AnodeTab({ data, onChange, onNextMainTab }: Props) {
         }
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+        {prevLabel && (
+          <button
+            type="button"
+            onClick={handlePrev}
+            style={{
+              padding: '6px 14px',
+              borderRadius: 'var(--radius)',
+              border: '1px solid var(--border)',
+              background: 'transparent',
+              color: 'var(--text-2)',
+              fontSize: '.875rem',
+              cursor: 'pointer',
+            }}
+          >
+            ← Prev: {prevLabel}
+          </button>
+        )}
         <button
           type="button"
           onClick={handleNext}
           style={{
+            marginLeft: 'auto',
             padding: '6px 14px',
             borderRadius: 'var(--radius)',
             border: '1px solid var(--border)',

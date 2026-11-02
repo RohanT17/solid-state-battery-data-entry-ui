@@ -36,12 +36,13 @@ function isFilled(battery: Battery, section: BatterySection): boolean {
   }
 }
 
-const TABS: { key: BatterySection; label: string }[] = [
-  { key: 'anode',       label: 'Anode' },
-  { key: 'separator',   label: 'Separator' },
-  { key: 'cathode',     label: 'Cathode' },
-  { key: 'assembly',    label: 'Assembly' },
-  { key: 'measurement', label: 'Measurement' },
+// jumpBackLabel: the name shown on the "Prev" button when jumping back into this tab
+const TABS: { key: BatterySection; label: string; jumpBackLabel: string }[] = [
+  { key: 'anode',       label: 'Anode',       jumpBackLabel: 'Layer Properties' },
+  { key: 'separator',   label: 'Separator',   jumpBackLabel: 'Layer Properties' },
+  { key: 'cathode',     label: 'Cathode',     jumpBackLabel: 'Layer Properties' },
+  { key: 'assembly',    label: 'Assembly',    jumpBackLabel: 'Assembly' },
+  { key: 'measurement', label: 'Measurement', jumpBackLabel: 'Rate Tests' },
 ]
 
 interface Props {
@@ -55,15 +56,30 @@ interface Props {
 
 export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, onDone }: Props) {
   const [activeTab, setActiveTab] = useState<BatterySection>('anode')
+  // true when the tab was entered via "Prev", so it opens on its last sub-tab
+  const [enterAtEnd, setEnterAtEnd] = useState(false)
 
   const filledCount = TABS.filter((t) => isFilled(battery, t.key)).length
   const allFilled = filledCount === TABS.length
 
   const summary = `${battery.anode.amFamily || '—'} / ${battery.cathode.amMaterial || '—'}`
 
+  const activeIndex = TABS.findIndex((t) => t.key === activeTab)
+
+  const prevMainTabLabel = activeIndex > 0 ? TABS[activeIndex - 1].jumpBackLabel : undefined
+
   const advanceMainTab = () => {
-    const idx = TABS.findIndex((t) => t.key === activeTab)
-    if (idx < TABS.length - 1) setActiveTab(TABS[idx + 1].key)
+    if (activeIndex < TABS.length - 1) {
+      setEnterAtEnd(false)
+      setActiveTab(TABS[activeIndex + 1].key)
+    }
+  }
+
+  const retreatMainTab = () => {
+    if (activeIndex > 0) {
+      setEnterAtEnd(true)
+      setActiveTab(TABS[activeIndex - 1].key)
+    }
   }
 
   const header = (
@@ -105,7 +121,7 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, o
             return (
               <button
                 key={t.key}
-                onClick={() => setActiveTab(t.key)}
+                onClick={() => { setEnterAtEnd(false); setActiveTab(t.key) }}
                 className={`battery-card-tab${active ? ' battery-card-tab--active' : ''}`}
               >
                 <StatusDot filled={isFilled(battery, t.key)} />
@@ -122,6 +138,9 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, o
               data={battery.anode}
               onChange={(p) => onChange('anode', p as Record<string, string>)}
               onNextMainTab={advanceMainTab}
+              onPrevMainTab={retreatMainTab}
+              prevMainTabLabel={prevMainTabLabel}
+              startAtEnd={enterAtEnd}
             />
           )}
           {activeTab === 'cathode' && (
@@ -129,6 +148,9 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, o
               data={battery.cathode}
               onChange={(p) => onChange('cathode', p as Record<string, string>)}
               onNextMainTab={advanceMainTab}
+              onPrevMainTab={retreatMainTab}
+              prevMainTabLabel={prevMainTabLabel}
+              startAtEnd={enterAtEnd}
             />
           )}
           {activeTab === 'separator' && (
@@ -136,6 +158,9 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, o
               data={battery.separator}
               onChange={(p) => onChange('separator', p as Record<string, string>)}
               onNextMainTab={advanceMainTab}
+              onPrevMainTab={retreatMainTab}
+              prevMainTabLabel={prevMainTabLabel}
+              startAtEnd={enterAtEnd}
             />
           )}
           {activeTab === 'assembly' && (
@@ -149,6 +174,9 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, o
               data={battery.measurement}
               onChange={(p) => onChange('measurement', p as Record<string, string>)}
               onNextMainTab={onDone}
+              onPrevMainTab={retreatMainTab}
+              prevMainTabLabel={prevMainTabLabel}
+              startAtEnd={enterAtEnd}
             />
           )}
 
@@ -156,10 +184,20 @@ export function BatteryCard({ battery, index, onChange, onRemove, onDuplicate, o
             <>
               <Divider className="battery-card-divider" />
               <div className="battery-card-next-action">
+                {activeIndex > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={retreatMainTab}
+                  >
+                    ← Previous section
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={advanceMainTab}
+                  style={{ marginLeft: 'auto' }}
                 >
                   Next section →
                 </Button>
