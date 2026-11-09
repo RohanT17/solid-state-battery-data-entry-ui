@@ -17,9 +17,9 @@ function flatten(paper: Paper, battery: Battery): Record<string, string> {
     other_tests:          paper.otherTests,
 
     // ── Anode — Composition ───────────────────────────────────────────────────
-    anode_am_family:                          anode.family,
-    anode_am_type:                            anode.type,
-    anode_am_material:                        anode.material,
+    anode_am_family:                          anode.amFamily,
+    anode_am_type:                            anode.amType,
+    anode_am_material:                        anode.amMaterial,
     anode_am_composition_pct:                 anode.amCompositionPct,
     anode_coating:                            anode.coating,
     anode_electrolyte_family:                 anode.electrolyteFamily,
