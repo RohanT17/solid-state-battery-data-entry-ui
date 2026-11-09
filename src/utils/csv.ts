@@ -123,8 +123,8 @@ function flatten(paper: Paper, battery: Battery): Record<string, string> {
     assembly_comments:              assembly.comments,
 
     // ── Measurement — Conditions ──────────────────────────────────────────────
-    measurement_temperature_c:          measurement.temperatureC,
-    measurement_mechanical_condition_mpa: measurement.mechanicalConditionMpa,
+    measurement_temperature_c:          measurement.temperatureC.trim() || 'NR',
+    measurement_mechanical_condition_mpa: measurement.mechanicalConditionMpa.trim() || 'NR',
     measurement_conditions_comments:    measurement.conditionsComments,
 
     // ── Measurement — Cycle Life Constant ─────────────────────────────────────

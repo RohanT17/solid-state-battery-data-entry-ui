@@ -1,4 +1,6 @@
 import React from 'react'
+import { createPortal } from 'react-dom'
+import { getFieldInfo } from '@/utils/fieldInfo'
 
 // ── Button ────────────────────────────────────────────────────────────────────
 
@@ -77,11 +79,86 @@ interface FieldProps {
   label: string
   unit?: string
   optional?: boolean
+  info?: string
   children: React.ReactNode
   style?: React.CSSProperties
 }
 
-export function Field({ label, unit, optional, children, style }: FieldProps) {
+export function InfoTip({ text }: { text: string }) {
+  const [pos, setPos] = React.useState<{ x: number; y: number } | null>(null)
+  const ref = React.useRef<HTMLSpanElement>(null)
+
+  const show = () => {
+    const r = ref.current?.getBoundingClientRect()
+    if (r) setPos({ x: r.left + r.width / 2, y: r.top })
+  }
+  const hide = () => setPos(null)
+
+  return (
+    <>
+      <span
+        ref={ref}
+        tabIndex={0}
+        role="img"
+        aria-label={text}
+        onMouseEnter={show}
+        onMouseLeave={hide}
+        onFocus={show}
+        onBlur={hide}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          alignSelf: 'center',
+          width: '13px',
+          height: '13px',
+          borderRadius: '50%',
+          border: '1px solid var(--text-3)',
+          color: 'var(--text-3)',
+          fontSize: '.62rem',
+          fontWeight: 600,
+          fontStyle: 'italic',
+          lineHeight: 1,
+          cursor: 'help',
+          userSelect: 'none',
+        }}
+      >
+        i
+      </span>
+      {pos &&
+        createPortal(
+          <div
+            role="tooltip"
+            style={{
+              position: 'fixed',
+              left: Math.min(Math.max(pos.x, 130), window.innerWidth - 130),
+              top: pos.y - 6,
+              transform: 'translate(-50%, -100%)',
+              width: 'max-content',
+              maxWidth: '240px',
+              padding: '6px 9px',
+              background: 'var(--surface)',
+              color: 'var(--text)',
+              border: '1px solid var(--border-2)',
+              borderRadius: 'var(--radius)',
+              boxShadow: '0 2px 8px rgba(0,0,0,.15)',
+              fontSize: '.75rem',
+              fontWeight: 400,
+              lineHeight: 1.4,
+              zIndex: 1000,
+              pointerEvents: 'none',
+            }}
+          >
+            {text}
+          </div>,
+          document.body,
+        )}
+    </>
+  )
+}
+
+export function Field({ label, unit, optional, info, children, style }: FieldProps) {
+  const infoText = info ?? getFieldInfo(label)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', ...style }}>
       <label
@@ -101,6 +178,7 @@ export function Field({ label, unit, optional, children, style }: FieldProps) {
             optional
           </span>
         )}
+        {infoText && <InfoTip text={infoText} />}
       </label>
       {children}
     </div>
